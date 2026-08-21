@@ -17,21 +17,23 @@
 
 ## 1.1 Đăng ký của nhóm và bằng chứng không trùng
 
-*(Bảng đăng ký workflow của cả nhóm + ảnh tin nhắn `docs/nhom-dang-ky-workflow.png`. Xem `docs/02-PHAM-VI-WORKFLOW.md` §4.)*
+Đã đăng ký workflow *Customer Storefront* trong nhóm chat của Nhóm 10 (bằng chứng đầy đủ, kèm bảng đăng ký của cả nhóm và ảnh tin nhắn: [`docs/endpoint-selection.md`](../docs/endpoint-selection.md) §5). *(SV: sau khi có phản hồi của cả nhóm, chép bảng đăng ký thật vào cả hai nơi — file này và `docs/endpoint-selection.md` — rồi xóa ghi chú "chưa tự làm" trong đó.)*
 
 ## 1.2 Workflow đã chọn — Customer Storefront
 
+Chi tiết đầy đủ (số dòng code, lý do từng bước, lựa chọn bị loại): [`docs/endpoint-selection.md`](../docs/endpoint-selection.md).
+
 | Bước | Endpoint | Nhóm §5 | Chi phí ở server (file:dòng) | Vì sao đáng đo |
 |---|---|---|---|---|
-| 1 | `POST /api/login` | auth-heavy | 1 SELECT + 1 UPDATE (`server.js:35,47`) | |
-| 2 | `GET /api/products?search=` | read-heavy | quét bảng `LIKE '%X%'` (`server.js:144`) | |
-| 3 | `GET /api/products/{id}` | read-heavy | đọc PK (`server.js:160`) | |
-| 4 | `POST /api/cart` | transactional | ghi RAM, **0 truy vấn DB** (`server.js:290`) | |
-| 5 | `POST /api/apply-coupon` | transactional | 1 SELECT + 1 COUNT (`server.js:366,385`) | |
-| 6 | `POST /api/checkout` | transactional | **INSERT** (`server.js:300`) | |
-| 7 | `POST /api/login` (sai) | auth-heavy | nhánh lockout (`server.js:54`) | phủ yêu cầu account-lockout của §6 |
+| 1 | `POST /api/login` | auth-heavy | 1 SELECT (`server.js:35`) + 1 UPDATE khi đúng (`server.js:48`) | Mọi bước sau phụ thuộc token của nó; không băm mật khẩu (`server.js:46`) nên p95 không đại diện cho hệ thống có bcrypt |
+| 2 | `GET /api/products?search=` | read-heavy | quét bảng `LIKE '%X%'` nối chuỗi, không tham số hóa (`server.js:144`) | không có index nào dùng được (wildcard đầu chuỗi) — endpoint đọc đắt nhất, quyết định cách phân loại đề xuất "thêm index" ở Task 2 |
+| 3 | `GET /api/products/{id}` | read-heavy | đọc PK (`server.js:160`) | tách chi phí đọc PK khỏi chi phí quét bảng ở bước 2; lưu ý id lạ vẫn trả 200+`{}` |
+| 4 | `POST /api/cart` | transactional | ghi RAM, **0 truy vấn DB**, không bao giờ xóa (`server.js:290-293`) | ứng viên rò rỉ bộ nhớ — biến chính của lượt Soak |
+| 5 | `POST /api/apply-coupon` | transactional | 1 SELECT (`server.js:370`) + 1 COUNT lồng nhau (`server.js:388`) | độ trễ cộng dồn từ 2 round-trip nối tiếp |
+| 6 | `POST /api/checkout` | transactional | **INSERT** thật (`server.js:302`) | điểm nghẽn ghi thật — SQLite ghi tuần tự; là chỗ đề xuất bật WAL ở Task 2 có ý nghĩa |
+| 7 | `POST /api/login` (sai) | auth-heavy | nhánh lockout: `+2`/lần, khóa khi `>=3` tức sau 2 lần, 180s (`server.js:54,56,57`) | phủ yêu cầu account-lockout đích danh của §6 |
 
-**Tỉ lệ phủ:** auth-heavy 2/7 · read-heavy 2/7 · transactional 3/7.
+**Tỉ lệ phủ:** auth-heavy 2/7 (28,6%) · read-heavy 2/7 (28,6%) · transactional 3/7 (42,8%).
 
 ## 1.3 Dữ liệu data-driven (§6)
 

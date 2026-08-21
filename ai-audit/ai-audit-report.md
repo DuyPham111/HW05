@@ -28,11 +28,12 @@
 - **Bằng chứng liên quan:** commit tiếp theo · `results: node tools/preflight.mjs` — toàn bộ mục setup `[OK]`, repo public xác nhận qua `api.github.com/repos/DuyPham111/HW05`
 
 ### [LOG-003] — Chốt phạm vi §5 và viết `endpoint-selection.md`
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-08-21
+- **Prompt:** "sang doc2 cho tôi" (yêu cầu thực hiện `docs/02-PHAM-VI-WORKFLOW.md`)
+- **AI Output:** Đọc lại chính xác số dòng của 6 handler trong `backend/server.js` bằng `grep -n` (không đoán) để đối chiếu với bảng đã viết sẵn ở `docs/02` — phát hiện và sửa 3 chỗ số dòng bị sai lệch nhỏ so với bản nháp trước đó: UPDATE khi login đúng là dòng 48 (không phải 47), SELECT/COUNT của apply-coupon là dòng 370/388 (không phải 366/385), INSERT của checkout là dòng 302 (không phải 300). Xác nhận `database.js` không có `CREATE INDEX` nào (grep không ra kết quả). Viết `docs/endpoint-selection.md` đầy đủ 5 mục: bảng ánh xạ 7 bước, tỉ lệ phủ 3 nhóm, 5 lựa chọn bị loại kèm lý do, và khung bảng đăng ký chống trùng nhóm. Cập nhật `report/main-report.md` §1.1–§1.2 trỏ sang file này và điền cột "Vì sao đáng đo".
+- **Human Review Notes:** *(SV đã kiểm)* — đã tự `grep -n` xác nhận số dòng chính xác trước khi ghi vào file (không tin theo bảng nháp cũ). *(SV chưa tự kiểm)* — **mục §5 "Đăng ký chống trùng trong nhóm" trong `docs/endpoint-selection.md` vẫn đang để trống, đây là thao tác thủ công BẮT BUỘC sinh viên phải tự làm** (nhắn nhóm chat, chụp màn hình, điền bảng) — AI không có quyền truy cập nhóm chat của sinh viên nên không thể tự hoàn thành mục này.
+- **Bằng chứng liên quan:** `docs/endpoint-selection.md` · `server.js:35,46,48,54,56,57,144,160,290-293,302,370,388`
 
 ### [LOG-004] — Sinh `seed-perf-data.mjs` và 5 file CSV data-driven
 - **Tool:**
