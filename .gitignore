@@ -6,3 +6,4 @@ Thumbs.db
 pack/
 
 # LUU Y: KHONG duoc ignore *.jtl hay results/ - de bai (§11) doi nop raw .jtl DAY DU
+jmeter.log

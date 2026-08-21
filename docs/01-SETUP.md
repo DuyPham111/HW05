@@ -148,7 +148,7 @@ Không có dependency ngoài — mọi script dùng `fetch` và `fs` có sẵn c
 > 1. `jmeter --version` chạy được (spawn, đọc stdout, tìm chuỗi `5.6`), và `java -version` là 17 trở lên.
 > 2. Backend sống: `GET http://localhost:3000/api/products` trả 200 và mảng ≥ 5 phần tử.
 > 3. Sáu endpoint của workflow đều phản hồi đúng như mong đợi: `POST /api/login` (đúng mật khẩu → 200 có `token`), `GET /api/products?search=iPhone` (200, mảng), `GET /api/products/1` (200, có field `id`), `POST /api/cart` (có Bearer token → 200), `POST /api/apply-coupon` với `{code:"BIGBUY", total_amount:600000, user_id:2}` (200, `success:true`, `discount_amount` = 50000), `POST /api/checkout` (200, có `orderId`).
-> 4. Bốn file trong `data/` tồn tại và có ≥ 1 dòng dữ liệu ngoài header.
+> 4. Năm file trong `data/` tồn tại và có ≥ 1 dòng dữ liệu ngoài header (đây là kết quả của `docs/03-DATA-DRIVEN-CSV.md` — nếu chưa làm buổi đó thì mục này `[FAIL]` là bình thường, chưa cần lo).
 > 5. In ra số dòng bảng `products` (gọi `GET /api/products` rồi đếm) — số này phải được ghi vào `results/run-log.md` mỗi lượt vì nó ảnh hưởng chi phí của bước search.
 > Kết thúc: exit code 1 nếu có bất kỳ `[FAIL]` nào.
 > Đừng dùng thư viện ngoài, đừng dùng `axios`.

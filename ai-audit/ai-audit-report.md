@@ -12,20 +12,20 @@
 ---
 
 ### [LOG-001] — Phân tích đề + dựng cấu trúc bài nộp và bộ hướng dẫn
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
-- **Bằng chứng liên quan:** commit `…`
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-08-20
+- **Prompt:** "hãy đọc đề của hw05, đọc lại bài làm hw02 của tôi ở folder tham khao, xem lại các lựa chọn của tôi ở hw02 kèm cấu trúc bài làm ở hw02 của tôi (cấu trúc bài làm này của tôi đã đc 100đ) và tham khảo cấu trúc bài làm hw05 ở tham khao, từ đó hãy dựng cấu trúc bài làm hw05 cho tôi, và viết các file md hướng dẫn làm các phần trong hw5 thật chi tiết (hướng dẫn từng bước cầm tay chỉ việc như sử dụng gì chọn gì viết câu lệnh prompt gì để làm phần đó)"
+- **AI Output:** Đọc đề HW05, báo cáo HW02 (100đ) và repo tham khảo HW05 của sinh viên khác (23127178). Đọc mã nguồn SUT (`server.js`, `database.js`) để rút ra 3 đặc điểm quyết định thiết kế: lockout sau 2 lần sai/180s, `userCarts` ghi RAM không xóa, `LIKE '%X%'` nối chuỗi SQL. Chốt workflow *Customer Storefront* 7 bước (khác workflow *admin back-office* của bài tham khảo — tránh trùng theo §5). Dựng cây thư mục đầy đủ + 17 file `docs/00`→`16` hướng dẫn từng bước kèm prompt mẫu + 4 Agent Skill khung + toàn bộ template report/audit/bug-report/endurance chờ điền.
+- **Human Review Notes:** *(SV chưa tự kiểm)* — sinh viên cần đọc lại `docs/00-ROADMAP.md` và `docs/02-PHAM-VI-WORKFLOW.md`, đối chiếu 3 đặc điểm SUT nêu trên với code thật (`server.js:54`, `server.js:290`, `server.js:144`) trước khi tin tưởng hoàn toàn, và xác nhận workflow đã đăng ký không trùng với các thành viên khác trong nhóm.
+- **Bằng chứng liên quan:** commit `d9248cf`
 
-### [LOG-002] — Setup môi trường + `preflight.mjs`
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
-- **Bằng chứng liên quan:**
+### [LOG-002] — Setup môi trường: JMeter, SUT, git remote, `preflight.mjs`
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-08-21
+- **Prompt:** "ở file docs1 set up tôi đã tải và giải nén ở D:\jmeter và tạo repo https://github.com/DuyPham111/HW05.git hãy giúp tôi thực hiện các phần còn lại của docs1"
+- **AI Output:** (1) Phát hiện và sửa lỗi giải nén lồng nhau (`D:\jmeter\apache-jmeter-5.6.3\apache-jmeter-5.6.3\bin\...`) → flatten về đúng `D:\jmeter\apache-jmeter-5.6.3\bin\jmeter.bat`. (2) Thêm `D:\jmeter\apache-jmeter-5.6.3\bin` vào PATH cấp User. (3) Sửa `jmeter.properties`: bật `output_format=csv`, `response_code`, `latency`, `connect_time`, `thread_counts`, `idle_time`, `assertion_results_failure_message`, và `aggregate_rpt_pct1/2/3 = 90/95/99`. (4) Sửa `jmeter.bat`: `HEAP` từ `-Xmx1g` lên `-Xmx4g -XX:MaxMetaspaceSize=512m`. (5) Reset + seed lại DB SUT (`node database.js`), chạy `node server.js` nền, xác nhận `GET /api/products` trả 200. (6) `git init` + commit đầu tiên (58 file) + `git remote add origin https://github.com/DuyPham111/HW05.git` + `git push -u origin main`; xác nhận repo **public** qua GitHub API (`"private": false`). (7) Viết `tools/preflight.mjs` theo đúng 5 mục nêu trong `docs/01-SETUP.md` §5.
+- **Human Review Notes:** *(SV đã kiểm)* — đã tự chạy `node tools/preflight.mjs` và thấy tất cả mục thuộc phạm vi doc 1 đều `[OK]` (jmeter --version, java >=17, backend, 6 endpoint của workflow); 5 mục `[FAIL]` còn lại là file CSV `data/*.csv`, thuộc phạm vi `docs/03-DATA-DRIVEN-CSV.md`, chưa làm — không phải lỗi của bước setup. *(SV chưa tự kiểm)* — chưa tự đọc lại toàn bộ code `preflight.mjs` để xác nhận từng assertion (vd `discount_amount === 50000`) đúng như spec `docs/01-SETUP.md` §5 yêu cầu review.
+- **Bằng chứng liên quan:** commit tiếp theo · `results: node tools/preflight.mjs` — toàn bộ mục setup `[OK]`, repo public xác nhận qua `api.github.com/repos/DuyPham111/HW05`
 
 ### [LOG-003] — Chốt phạm vi §5 và viết `endpoint-selection.md`
 - **Tool:**
