@@ -97,14 +97,29 @@ Mỗi file CSV một element `CSV Data Set Config`, đặt ở **cấp Thread Gr
 
 | Thuộc tính | Giá trị | Vì sao |
 |---|---|---|
-| Filename | `${__P(datadir,../data)}/users.csv` | đường dẫn tương đối qua property → chạy được cả GUI lẫn non-GUI |
+| Filename | `${__P(datadir,data)}/users.csv` | đường dẫn tương đối qua property → chạy được cả GUI lẫn non-GUI |
 | File encoding | `UTF-8` | tên sản phẩm có tiếng Việt |
-| Variable Names | `email,password,user_id` | để trống thì JMeter lấy header — nhưng ghi rõ ra thì plan tự tài liệu hóa |
+| Variable Names | `email,password,csv_user_id` | **phải ghi rõ, không để trống** — xem cảnh báo va chạm tên biến bên dưới |
 | Ignore first line | `True` | có header |
 | Delimiter | `,` | |
 | **Recycle on EOF** | `True` | hết file thì quay lại đầu — cần cho lượt dài |
 | **Stop thread on EOF** | `False` | |
 | **Sharing mode** | **`All threads`** | mỗi thread lấy dòng **kế tiếp** → 200 VU ↔ 200 tài khoản, không đụng nhau |
+
+> ⚠️ **Va chạm tên biến giữa hai file CSV — lỗi này im lặng làm hỏng cả lượt đo.**
+> `users.csv` và `users_lockout.csv` **đều có cột tên `email`**. Nếu để JMeter tự lấy tên biến từ
+> header, CSV Data Set nạp sau sẽ **ghi đè** `${email}` của cái nạp trước → bước 1 đăng nhập bằng
+> email của tài khoản mồi kèm mật khẩu đúng → sai hoàn toàn, mà JMeter **không báo lỗi gì cả**.
+> Vì thế phải đặt tên biến tường minh và khác nhau:
+>
+> | File | Variable Names |
+> |---|---|
+> | `users.csv` | `email,password,csv_user_id` |
+> | `users_lockout.csv` | **`lock_email,wrong_password`** ← đổi `email` → `lock_email` |
+>
+> `csv_user_id` cố ý **không dùng** trong workflow: bước 5 dùng `${uid}` trích từ response của
+> bước 1 (`$.user.id`), vì giá trị đó chắc chắn khớp với `${token}` đang cầm. Cột trong CSV giữ
+> lại làm đối chứng.
 
 > **`Sharing mode` là chỗ AI hay để sai.** Nếu để `Current thread group` hay `Current thread`, **mỗi thread đọc file từ đầu** → tất cả VU dùng dòng 1 → 200 VU cùng một tài khoản → đúng cái thảm họa mà [02](02-PHAM-VI-WORKFLOW.md) §3 nói. Kiểm bằng cách mở `.jmx` và tìm `shareMode`, phải là `shareMode.all`.
 

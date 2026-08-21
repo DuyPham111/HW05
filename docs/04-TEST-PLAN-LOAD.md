@@ -1,7 +1,7 @@
 # 04 — Task 1: Load test plan (20đ) — AI sinh từng bước, người duyệt từng bước
 
 > Đây là file **dài nhất và quan trọng nhất**. Làm xong Load plan thì Stress và Spike chỉ là đổi tham số.
-> Output: `test-plans/23127183_Load_20260820.jmx` · `tools/gen-test-plans.py` · bảng human review trong `report/main-report.md` §2.4.
+> Output: `test-plans/23127183_Load_20260821.jmx` · `tools/gen-test-plans.py` · bảng human review trong `report/main-report.md` §2.4.
 
 ---
 
@@ -119,7 +119,7 @@ Giải pháp: **một** định nghĩa workflow trong Python → phát ra 4 file
 > - Tên file: `{MSSV}_{Scenario}_{YYYYMMDD}.jmx` với `MSSV=23127183`, ngày lấy từ tham số `--date` (mặc định hôm nay).
 > - `HTTP Request Defaults`: server `${__P(host,localhost)}`, port `${__P(port,3000)}`, protocol http, **Connect timeout 10000, Response timeout 30000**.
 > - `HTTP Header Manager` cấp Thread Group: `Content-Type: application/json`.
-> - 5 `CSVDataSet`, tất cả **`shareMode.all`**, `recycle=true`, `stopThread=false`, ignoreFirstLine=true, fileEncoding UTF-8, filename `${__P(datadir,../data)}/<tên>.csv`.
+> - 5 `CSVDataSet`, tất cả **`shareMode.all`**, `recycle=true`, `stopThread=false`, ignoreFirstLine=true, fileEncoding UTF-8, filename `${__P(datadir,data)}/<tên>.csv` (mặc định `data`, vì JMeter được gọi từ thư mục gốc repo).
 > - Bước 1: `JSONPostProcessor` lấy `$.token` → biến `token`, và `$.user.id` → biến `uid`.
 > - Bước 4 và 6: `HeaderManager` cấp sampler thêm `Authorization: Bearer ${token}`.
 > - `UniformRandomTimer` cấp Thread Group (delay/range lấy từ `SCENARIOS`).
@@ -151,7 +151,7 @@ cd "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing" && npm 
 Mở thử bằng GUI để chắc file hợp lệ:
 
 ```bash
-jmeter -t "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing/test-plans/23127183_Load_20260820.jmx"
+jmeter -t "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing/test-plans/23127183_Load_20260821.jmx"
 ```
 
 **Commit:** `test(load): sinh 4 plan .jmx tu mot dinh nghia workflow chung`
@@ -179,7 +179,7 @@ jmeter -t "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing/t
 Sinh một bản smoke: 2 VU, 40 giây.
 
 ```bash
-cd "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing" && jmeter -n -t test-plans/23127183_Load_20260820.jmx -l results/jtl/smoke.jtl -Jthreads=2 -Jduration=40 -Jdatadir=../data
+cd "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing" && jmeter -n -t test-plans/23127183_Load_20260821.jmx -l results/jtl/smoke.jtl -Jthreads=2 -Jduration=40 -Jdatadir=data
 ```
 
 Rồi soi ngay:

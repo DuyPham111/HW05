@@ -1,0 +1,23 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1787279200393,80,01 Login,200,OK,Storefront Load 1-1,text,true,,638,231,1,1,http://localhost:3000/api/login,80,0,56
+1787279203317,52,02 Search products,200,OK,Storefront Load 1-1,text,true,,448325,175,1,1,http://localhost:3000/api/products?search=iPhone,50,0,0
+1787279204495,2,03 Product detail,200,OK,Storefront Load 1-1,text,true,,439,163,1,1,http://localhost:3000/api/products/6,2,0,0
+1787279206578,5,04 Add to cart,200,OK,Storefront Load 1-1,text,true,,294,364,1,1,http://localhost:3000/api/cart,5,0,0
+1787279208742,8,05 Apply coupon,200,OK,Storefront Load 1-1,text,true,,399,237,1,1,http://localhost:3000/api/apply-coupon,8,0,0
+1787279211689,9,06 Checkout,200,OK,Storefront Load 1-1,text,true,,312,420,1,1,http://localhost:3000/api/checkout,9,0,0
+1787279214336,5,07 Login sai (lockout),401,Unauthorized,Storefront Load 1-1,text,true,,314,233,1,1,http://localhost:3000/api/login,5,0,0
+1787279215503,6,01 Login,200,OK,Storefront Load 1-1,text,true,,638,231,1,1,http://localhost:3000/api/login,6,0,2
+1787279217213,47,02 Search products,200,OK,Storefront Load 1-1,text,true,,450860,176,1,1,http://localhost:3000/api/products?search=Samsung,45,0,0
+1787279220011,4,03 Product detail,200,OK,Storefront Load 1-1,text,true,,442,164,1,1,http://localhost:3000/api/products/46,4,0,0
+1787279222465,4,04 Add to cart,200,OK,Storefront Load 1-1,text,true,,294,365,1,1,http://localhost:3000/api/cart,4,0,0
+1787279224398,5,05 Apply coupon,200,OK,Storefront Load 1-1,text,true,,399,237,1,1,http://localhost:3000/api/apply-coupon,5,0,0
+1787279227220,14,06 Checkout,200,OK,Storefront Load 1-1,text,true,,312,420,1,1,http://localhost:3000/api/checkout,14,0,0
+1787279229644,6,01 Login,200,OK,Storefront Load 1-2,text,true,,638,231,2,2,http://localhost:3000/api/login,6,0,1
+1787279230157,4,07 Login sai (lockout),401,Unauthorized,Storefront Load 1-1,text,true,,314,233,2,2,http://localhost:3000/api/login,4,0,0
+1787279231026,63,02 Search products,200,OK,Storefront Load 1-2,text,true,,450844,176,2,2,http://localhost:3000/api/products?search=MacBook,39,0,0
+1787279231952,6,01 Login,200,OK,Storefront Load 1-1,text,true,,638,231,2,2,http://localhost:3000/api/login,6,0,2
+1787279233600,4,03 Product detail,200,OK,Storefront Load 1-2,text,true,,442,164,2,2,http://localhost:3000/api/products/86,4,0,0
+1787279233570,47,02 Search products,200,OK,Storefront Load 1-1,text,true,,450814,176,2,2,http://localhost:3000/api/products?search=AirPods,27,0,0
+1787279235055,3,03 Product detail,200,OK,Storefront Load 1-1,text,true,,445,165,2,2,http://localhost:3000/api/products/126,3,0,0
+1787279235460,3,04 Add to cart,200,OK,Storefront Load 1-2,text,true,,294,365,2,2,http://localhost:3000/api/cart,3,0,0
+1787279236413,6,04 Add to cart,200,OK,Storefront Load 1-1,text,true,,294,366,1,1,http://localhost:3000/api/cart,6,0,0
