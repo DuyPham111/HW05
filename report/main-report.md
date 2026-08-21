@@ -5,7 +5,7 @@
 
 **Họ và tên:** Phạm Vũ Ngọc Duy · **MSSV:** 23127183 · **Nhóm:** 10
 **Ngày thực hiện:** …/08/2026 → …/08/2026
-**SUT:** EShop — https://github.com/ttbhanh/eshop-sut · backend `http://localhost:3000/api`
+**SUT:** EShop — https://github.com/ttbhanh/eshop-sut · backend `http://127.0.0.1:3000/api`
 **Công cụ:** Apache JMeter 5.6.3 · Java Temurin 17 · Node v22.16 · Task Manager
 **Máy đo:** Windows 11, hostname `Pham_Vu_Ngoc_Duy` — xem [`resource-monitor/hardware-report.md`](../resource-monitor/hardware-report.md)
 
@@ -107,10 +107,12 @@ Chi tiết đầy đủ (số dòng code, lý do từng bước, lựa chọn b�
 | 5 | Nguồn `user_id` cho bước 5 nhập nhằng: `users.csv` có cột `user_id`, mà bước 1 cũng trích được `$.user.id` | Dùng giá trị CSV có rủi ro lệch với `${token}` đang cầm nếu hai nguồn phân kỳ | Dùng **`${uid}` trích từ response** bước 1; đổi cột CSV thành `csv_user_id` và giữ làm đối chứng | **Chất lượng prompt** — đặc tả đưa ra hai nguồn cho cùng một giá trị mà không nói lấy cái nào | ❌ **Không** — cả hai nguồn đều cho số hợp lệ trong điều kiện bình thường |
 | 6 | Mô tả lockout trong tài liệu thiết kế ghi gọn *"khóa sau 2 lần sai"* | Đúng về **trạng thái DB** (lần 2 làm `login_attempts`=4 ≥ 3 nên `locked_until` được SET) nhưng **403 chỉ xuất hiện từ lần 3** | Tách bạch hai phát biểu trong tài liệu và trong thiết kế assertion | **Đặc điểm endpoint** — lỗi về **thứ tự** xử lý (kiểm-khóa-trước rồi mới xử-lý-mật-khẩu-sau), giống hệt loại lỗi đã ghi ở HW02 | ❌ **Không** — nhưng nó là nguyên nhân gốc của lỗi #2 |
 | 7 | Bậc Stress đặt bước **60 giây**, trong khi bậc 4 ramp 100 thread mất **20 giây** | Với `delay` 0/60/120/180 và `duration` 420/360/300/240, các nhóm cùng kết thúc ở t=420s → bậc 1–3 chỉ có 60s còn **bậc 4 chiếm 240s**; và cửa sổ *ổn định* của bậc 4 chỉ còn 40s nếu ép về 60s | Đổi bước bậc thành **90 giây** (`delay` 0/90/180/270, `duration` 420/330/240/150) → mọi bậc có cửa sổ ổn định ≥ 70s, tổng 420s | **Chất lượng prompt** — đặc tả ghi "mỗi bậc 60s" nhưng bộ số `delay`/`duration` kèm theo lại không tạo ra các bậc bằng nhau; không ai đối chiếu ý định với con số | ❌ **Không** — plan chạy đúng, chỉ là cửa sổ p95 của bậc quan trọng nhất bị ngắn |
+| 8 | `search-terms.csv` chứa từ khoá **`Perf`** và **`PerfProduct`** — khớp *toàn bộ* 20.000 sản phẩm | Đo trực tiếp: `?search=Perf` trả **3.605.474 byte ≈ 3,6 MB** mỗi request (`?search=iPhone` = 448 KB). Ở 200 VU, tiến trình `node.exe` **bị OOM-kill giữa lượt**: lượt chạy 45 phút thay vì 4, chỉ 70 sample, `max elapsed = 2.717.210 ms`, log backend không có dòng lỗi nào | Đổi sang tiền tố số: `PerfProduct-100` (~20 KB) / `PerfProduct-1234` (~2 KB) / tên đầy đủ (185 B) → giảm **180 lần**. Chạy lại: **19.454 sample, 0% error, đúng 4:00** | **Chất lượng prompt** — đặc tả CSV chỉ ràng buộc *ký tự* (`'` `%` `_`) mà quên ràng buộc **kích thước tập kết quả**; và seed sinh tên theo mẫu `PerfProduct-{i}-{keyword}` khiến 8 từ khoá gốc mỗi cái khớp đúng 2.500 dòng | ✅ Có — nhưng theo cách tệ nhất: **giết SUT**, không phải báo lỗi |
+| 9 | Mặc định `host` là `localhost` | Trong môi trường này `localhost` phân giải hỏng: `curl http://localhost:3000` trả **000 sau 2,2s** (timeout IPv6) trong khi `http://127.0.0.1:3000` trả **200 trong 32 ms** | Đổi mặc định của cả 4 test plan và 4 script sang **`127.0.0.1`** | **Giới hạn mô hình** — không đoán được cấu hình phân giải tên của một máy cụ thể; chỉ lộ ra khi chạy thật | ⚠️ Không ổn định — JMeter phân giải được nhưng `curl` thì không, nên bẫy này ẩn cho tới khi kiểm tay |
 
-**Tổng: 7 lỗi** — chất lượng prompt **4** · đặc điểm endpoint **3** · giới hạn mô hình **0**.
+**Tổng: 9 lỗi** — chất lượng prompt **5** · đặc điểm endpoint **3** · giới hạn mô hình **1**.
 
-> **Điều đáng nói nhất:** **5/7 lỗi không làm test plan báo lỗi** — plan vẫn chạy 0% error với chúng. Chúng chỉ lộ ra khi (a) đọc kỹ tên biến giữa các file CSV, và (b) **cố tình phá assertion để kiểm nó có thật sự bắt được gì không**. Nếu chỉ nhìn "smoke test 0% error → plan đúng" thì cả 4 lỗi này đi thẳng vào bộ số liệu cuối cùng.
+> **Điều đáng nói nhất:** **5/9 lỗi không làm test plan báo lỗi** — plan vẫn chạy 0% error với chúng. Chúng chỉ lộ ra khi (a) đọc kỹ tên biến giữa các file CSV, và (b) **cố tình phá assertion để kiểm nó có thật sự bắt được gì không**. Nếu chỉ nhìn "smoke test 0% error → plan đúng" thì cả 4 lỗi này đi thẳng vào bộ số liệu cuối cùng.
 
 **Hai phép kiểm đã dùng để chứng minh assertion không vô nghĩa** (không dừng ở "0% error nên chắc đúng"):
 
@@ -171,12 +173,25 @@ Chi tiết đầy đủ (số dòng code, lý do từng bước, lựa chọn b�
 
 ## 3.4 Đo hồi phục sau cú sốc (Spike)
 
-| Cửa sổ | Khoảng | Peak VU | Sample | RPS | Error% | p50 | p95 | p99 | max |
+> **Nguồn số dưới đây:** lượt **kiểm chứng** `results/jtl/validate-spike.jtl` (19.454 sample, 0% error, đúng 4:00).
+> Đây **chưa phải lượt chính thức** — lượt chính thức cần ảnh Task Manager cùng khung và mẫu tài nguyên (doc 7). Bảng này chứng minh **phương pháp phân tích đã chạy được**; số cuối cùng sẽ thay bằng lượt chính thức.
+
+| Cửa sổ | Khoảng | Peak VU | Sample | RPS | Error% | p50 | **p95** | p99 | max |
 |---|---|---|---|---|---|---|---|---|---|
-| W1 nền trước | 10–60s | | | | | | | | |
-| W2 trong sốc | 60–95s | | | | | | | | |
-| W3 ngay sau | 95–125s | | | | | | | | |
-| W4 nền sau | 125–240s | | | | | | | | |
+| W1 nền trước | 10–55s | 10 | 1.769 | 39,3 | 0% | 4 | **15** | 26 | 59 |
+| W2 trong sốc | 65–90s | **210** | 9.695 | **388,0** | 0% | 278 | **479** | 554 | 727 |
+| W3 ngay sau | 96–125s | 10 | 1.161 | 40,0 | 0% | 3 | **12** | 20 | 95 |
+| W4 nền sau | 130–238s | 10 | 4.157 | 38,5 | 0% | 3 | **18** | 68 | 171 |
+
+**Đọc kết quả:**
+
+1. **Hồi phục tức thì, không tồn đọng hàng đợi.** p95 ở W3 = **12 ms**, thậm chí *thấp hơn* baseline W1 = 15 ms, và W4 = 18 ms. Nếu có hàng đợi tích lũy thì W3 phải còn cao rồi mới giảm dần — ở đây không có dấu hiệu đó.
+2. **Hệ thống hấp thụ cú sốc bằng ĐỘ TRỄ chứ không bằng cách từ chối request:** VU tăng **21×** (10 → 210), p95 tăng **32×** (15 → 479 ms), nhưng **error rate = 0%** ở cả 4 cửa sổ và `max` chỉ 727 ms — không có timeout, không có 5xx.
+3. **Load generator KHÔNG phải điểm nghẽn** — phép kiểm chéo mà §3 của `docs/06` đòi:
+   - RPS lý thuyết tối đa = VU / (think trung bình + latency) = 210 / (0,250 + 0,279) = **397,2 req/s**
+   - RPS đo được ở W2 = **388,0 req/s** → đạt **97,7%** mức lý thuyết
+   - ⇒ VU được dùng gần hết công suất; giới hạn nằm ở **độ trễ của server**, không phải ở khả năng sinh tải của JMeter. Nếu JMeter là nút cổ chai thì RPS đã thấp hơn nhiều so với mức lý thuyết.
+4. **RPS tăng dưới tuyến tính** (9,9× so với VU 21×) — đúng như kỳ vọng khi hệ thống bị giới hạn bởi độ trễ: mỗi VU phải chờ lâu hơn nên số vòng lặp/giây không tăng theo kịp số VU.
 
 ---
 

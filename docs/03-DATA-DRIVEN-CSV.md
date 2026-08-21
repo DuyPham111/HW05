@@ -77,6 +77,30 @@ Mất khoảng 3–6 phút. Trong lúc chờ thì viết `docs/endpoint-selectio
 
 Chỉ dùng chữ, số, khoảng trắng, dấu gạch ngang.
 
+### 3.2b `keyword` còn phải giới hạn **KÍCH THƯỚC TẬP KẾT QUẢ** — chỗ này đã làm chết SUT một lần
+
+`GET /api/products` **không có phân trang** (`server.js:141–157`) — nó trả về **toàn bộ** dòng khớp.
+Tên sản phẩm seed có dạng `PerfProduct-{i}-{keyword}` với 8 keyword xoay vòng, nên:
+
+| Từ khoá | Số dòng khớp | Payload đo được |
+|---|---|---|
+| `Perf` / `PerfProduct` | **20.000** | **3.605.474 B ≈ 3,6 MB** |
+| `iPhone` (1 trong 8 keyword gốc) | 2.501 | 448.048 B ≈ 448 KB |
+| `PerfProduct-100` (tiền tố 3 chữ số) | ~111 | 20.162 B ≈ 20 KB |
+| `PerfProduct-1234` (tiền tố 4 chữ số) | ~11 | 1.998 B |
+| `iPhone 15 Pro Max` (tên đầy đủ) | 1 | 185 B |
+
+**Chuyện đã xảy ra thật:** lượt Spike đầu tiên dùng `search-terms.csv` có `Perf`/`PerfProduct`.
+Ở 200 VU, tiến trình `node.exe` phải buffer hàng trăm MB JSON cùng lúc → **bị OOM-kill giữa lượt**.
+Lượt chạy **45 phút** thay vì 4, chỉ **70 sample**, `max elapsed = 2.717.210 ms`, và log backend
+**không có một dòng lỗi nào** (tiến trình bị hệ điều hành giết, không kịp ghi gì).
+
+→ Dùng **tiền tố số** cho tập kết quả có giới hạn, mô phỏng hành vi thật: duyệt danh mục (~111 dòng)
+/ tìm hẹp (~11) / tìm đúng tên (1). Sau khi sửa, cùng plan đó chạy **19.454 sample, 0% error, đúng 4:00**.
+
+> Bản thân việc `/api/products` không phân trang là một **vấn đề hiệu năng thật của SUT** — ghi vào
+> bug report (ứng viên P5), vì §6 khuyến khích báo performance issue.
+
 ### 3.3 `product_id` phải là **id thật đang tồn tại**
 
 `server.js:159`: id không tồn tại → **HTTP 200 + body `{}`**. Nghĩa là JMeter báo "thành công" trong khi thực ra không đọc được gì, và bạn đo nhầm chi phí của một truy vấn miss. Vì thế `products.csv` phải lấy id từ `GET /api/products` **sau khi seed**, không được tự sinh `1..500`.

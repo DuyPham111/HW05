@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
 
-const API_URL = process.env.API_URL || "http://localhost:3000";
+const API_URL = process.env.API_URL || "http://127.0.0.1:3000";
 const BATCH_SIZE = 20; // SQLite ghi tuan tu — ban 200 request cung luc de dinh SQLITE_BUSY
 const PASSWORD = "Test1234!";
 const WRONG_PASSWORD = "Sai_MK_123!";
@@ -189,14 +189,32 @@ async function main() {
   writeCsv("users.csv", ["email", "password", "user_id"], validUsers);
   writeCsv("users_lockout.csv", ["email", "wrong_password"], lockoutUsers);
 
-  // KHONG duoc chua ' % _ — server.js:144 noi chuoi SQL truc tiep (docs/03 §3.2)
-  const searchTerms = [
-    "iPhone", "Samsung", "MacBook", "AirPods", "Keychron", "Laptop", "Tai nghe", "Ban phim",
-    "iPhone 15", "Samsung Galaxy", "MacBook Pro", "AirPods Pro", "Keychron Q1",
-    "Laptop gaming", "Tai nghe khong day", "Ban phim co",
-    "Perf", "PerfProduct", "dien thoai", "may tinh", "phu kien",
-    "Apple", "Sony", "Dell", "HP", "Asus", "Lenovo", "LG", "Xiaomi", "Oppo",
-  ].map((keyword) => ({ keyword }));
+  // Tu khoa tim kiem — hai rang buoc:
+  //
+  // (1) KHONG duoc chua ' % _ — server.js:144 noi chuoi SQL truc tiep (docs/03 §3.2).
+  //
+  // (2) KICH THUOC TAP KET QUA phai co gioi han. `GET /api/products` KHONG CO PHAN TRANG
+  //     (server.js:141-157) — no tra ve TOAN BO dong khop. Ten san pham seed co dang
+  //     `PerfProduct-{i}-{keyword}` voi keyword xoay vong 8 gia tri, nen:
+  //         "iPhone"      -> khop 2.500 dong  (~500 KB JSON)
+  //         "Perf"        -> khop 20.000 dong (~4 MB JSON!)
+  //     Dung cac tu khoa do o 200 VU thi thu do duoc la toc do Node serialize JSON,
+  //     KHONG phai chi phi truy van — va thuc te da lam tien trinh backend chet
+  //     (xem bao cao §2.4 dong 8 va bug-report P5).
+  //
+  //     Vi the dung tien to so: "PerfProduct-123" khop nhung i bat dau bang "123"
+  //     (123, 1230-1239, 12300-12399) = ~111 dong; tien to 4 chu so = ~11 dong.
+  //     Phan bo duoi mo phong hanh vi that: duyet danh muc (~111) / tim hep (~11) /
+  //     tim dung ten (1-2).
+  const browseTerms = ["100","112","128","134","147","156","163","178","185","192"]
+    .map((p) => `PerfProduct-${p}`);                       // ~111 dong moi tu khoa
+  const narrowTerms = ["1234","2468","3579","4680","5791","6802","7913","9024","1357","8135"]
+    .map((p) => `PerfProduct-${p}`);                       // ~11 dong moi tu khoa
+  const exactTerms = [
+    "iPhone 15 Pro Max", "Samsung Galaxy S24 Ultra", "MacBook Pro M3",
+    "Tai nghe AirPods Pro 2", "Ban phim co Keychron Q1",
+  ];                                                        // 1 dong moi tu khoa
+  const searchTerms = [...browseTerms, ...narrowTerms, ...exactTerms].map((keyword) => ({ keyword }));
   writeCsv("search-terms.csv", ["keyword"], searchTerms);
 
   // Lay tu id THAT vua tao — id khong ton tai van tra 200+{} (server.js:159-161)

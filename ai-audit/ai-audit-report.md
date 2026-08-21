@@ -88,13 +88,15 @@
 - **Scenario liên quan:** Stress (và dùng chung cho Spike, Soak)
 - **Bằng chứng liên quan:** `tools/reset-lockout.mjs` · `tools/gen-test-plans.py` hằng `SCENARIOS["Stress"]` · `docs/05` §1 · `report/main-report.md` §2.4 dòng 7
 
-### [LOG-010] — Thêm scenario Spike (2 thread group)
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
+### [LOG-010] — Bước Spike: `summarize-jtl.mjs`, lượt validate làm chết SUT, và truy nguyên nhân gốc
+- **Tool:** Claude Code (Opus 5)
+- **Date & Time:** 2026-08-21
+- **Prompt:** "sang doc6 cho tôi" — thực hiện `docs/06-TEST-PLAN-SPIKE.md`.
+- **AI Output:** (1) Xác minh cấu trúc plan Spike khớp đặc tả (10 VU nền t=0..240, 200 VU xung t=60..90, think 0–500ms, View Results Tree). (2) Viết `tools/summarize-jtl.mjs` — nguồn duy nhất sinh số liệu — với `--windows`, tách **Error% thô** khỏi **Error% thật** (loại 401/403 của bước 7), đọc header động, ghi rõ công thức percentile nearest-rank. (3) Chạy lượt validate Spike đầu tiên → **SUT CHẾT**: 45 phút thay vì 4, 70 sample, `max elapsed = 2.717.210 ms`, tiến trình `node.exe` biến mất, log backend trống. (4) Truy nguyên nhân gốc **bằng số đo chứ không suy đoán**: `?search=Perf` trả **3,6 MB/request** vì `/api/products` không phân trang và seed sinh tên `PerfProduct-{i}-{keyword}` khiến `Perf` khớp cả 20.000 dòng → 200 VU × 3,6 MB → OOM. (5) Sửa `search-terms.csv` sang tiền tố số (20 KB / 2 KB / 185 B) và chạy lại: **19.454 sample, 0% error, đúng 4:00**. (6) Phát hiện thêm 2 bẫy: restart backend **xoá sạch DB** (`database.js:13-21`), và `localhost` phân giải hỏng (000 sau 2,2s) trong khi `127.0.0.1` trả 200 trong 32ms.
+- **Human Review Notes:** *(SV đã kiểm)* — yêu cầu **không được** kết luận "SUT yếu, chết dưới tải" mà phải phân định rõ lỗi của ai: đo payload từng từ khoá cho thấy nguyên nhân trực tiếp là **dữ liệu test do mình thiết kế sai** (từ khoá quét toàn bảng), còn cái SUT thật sự thiếu là **phân trang** — hai điều khác nhau và phải viết tách bạch. Cũng yêu cầu chạy **phép kiểm chéo load generator** trước khi tin bảng hồi phục: RPS lý thuyết 210/(0,250+0,279) = 397,2 req/s so với RPS đo được 388,0 → **97,7%**, chứng minh JMeter không phải nút cổ chai và con số p95 là của server. Đã siết lại cửa sổ W1 từ 10–60s xuống 10–55s sau khi thấy `peak VU = 43` thay vì 10 — cửa sổ cũ lấn 1 giây vào giai đoạn ramp của cú sốc. *(SV chưa tự kiểm)* — lượt validate này **không phải lượt chính thức**: chưa có ảnh Task Manager cùng khung và chưa có mẫu tài nguyên CPU/RSS (cần doc 7).
 - **Scenario liên quan:** Spike
+- **File `.jtl` sinh ra:** `results/jtl/validate-spike.jtl` (lượt hỏng đầu tiên đã bị ghi đè khi chạy lại)
+- **Con số nào trong báo cáo đến từ lượt này:** bảng 4 cửa sổ §3.4 · human review §2.4 dòng 8–9 · bug P5, P6
 
 ### [LOG-011] — `run-scenario.mjs` + `sample-resources.ps1` + `reset-lockout.mjs`
 - **Tool:**

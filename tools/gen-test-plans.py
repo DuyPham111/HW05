@@ -239,7 +239,7 @@ def el_http_defaults(lvl):
 {ind(lvl+1)}<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
 {ind(lvl+2)}<collectionProp name="Arguments.arguments"/>
 {ind(lvl+1)}</elementProp>
-{ind(lvl+1)}<stringProp name="HTTPSampler.domain">${{__P(host,localhost)}}</stringProp>
+{ind(lvl+1)}<stringProp name="HTTPSampler.domain">${{__P(host,127.0.0.1)}}</stringProp>
 {ind(lvl+1)}<stringProp name="HTTPSampler.port">${{__P(port,3000)}}</stringProp>
 {ind(lvl+1)}<stringProp name="HTTPSampler.protocol">http</stringProp>
 {ind(lvl+1)}<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>

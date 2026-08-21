@@ -10,7 +10,7 @@ import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 
-const API_URL = process.env.API_URL || "http://localhost:3000";
+const API_URL = process.env.API_URL || "http://127.0.0.1:3000";
 const JMETER_CANDIDATES = [
   process.env.JMETER_BIN,
   "jmeter",

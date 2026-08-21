@@ -2,7 +2,7 @@
 
 > Spike hỏi câu khác hẳn Load và Stress: **"dội một cú sốc rồi rút, hệ thống có trở lại bình thường không, và mất bao lâu?"**
 > Cái được chấm ở đây là **đo được sự hồi phục**, không phải chỉ tạo được cú sốc.
-> Output: `test-plans/23127183_Spike_20260820.jmx` + lượt chạy + mục §2.3 và §3.4 báo cáo.
+> Output: `test-plans/23127183_Spike_20260821.jmx` + lượt chạy + mục §2.3 và §3.4 báo cáo.
 
 ---
 
@@ -82,6 +82,32 @@ Chia lượt thành **4 cửa sổ thời gian** và tính p95 riêng cho từng
 | W4 nền sau | 125–240s | 10 | | | | | | | |
 ```
 
+### Kết quả kiểm chứng thật (lượt `validate-spike.jtl`)
+
+Bảng dưới là số **đo được**, không phải ví dụ — dùng để chứng minh phương pháp phân tích chạy đúng
+trước khi tốn lượt chính thức:
+
+| Cửa sổ | Khoảng | Peak VU | Sample | RPS | Error% | p50 | **p95** | max |
+|---|---|---|---|---|---|---|---|---|
+| W1 nền trước | 10–55s | 10 | 1.769 | 39,3 | 0% | 4 | **15** | 59 |
+| W2 trong sốc | 65–90s | **210** | 9.695 | **388,0** | 0% | 278 | **479** | 727 |
+| W3 ngay sau | 96–125s | 10 | 1.161 | 40,0 | 0% | 3 | **12** | 95 |
+| W4 nền sau | 130–238s | 10 | 4.157 | 38,5 | 0% | 3 | **18** | 171 |
+
+**Kết luận: hồi phục tức thì.** p95(W3) = 12 ms còn *thấp hơn* baseline W1 = 15 ms → không có
+hàng đợi tồn đọng. Hệ thống hấp thụ cú sốc bằng **độ trễ** (p95 tăng 32×) chứ không bằng cách từ
+chối request (**0% error**, max chỉ 727 ms, không timeout).
+
+**Phép kiểm chéo bắt buộc — load generator có phải nút cổ chai không?**
+
+```
+RPS lý thuyết tối đa = VU / (think trung bình + latency) = 210 / (0,250 + 0,279) = 397,2 req/s
+RPS đo được ở W2                                          = 388,0 req/s   → 97,7% mức lý thuyết
+```
+
+⇒ VU được dùng gần hết công suất, giới hạn nằm ở **độ trễ của server** chứ không ở JMeter.
+Nếu tỉ lệ này thấp (vd < 60%) thì phải nghi ngờ load generator và **ghi vào mục Giới hạn**.
+
 ### Cách đọc đúng
 
 | Quan sát | Kết luận đúng |
@@ -99,7 +125,7 @@ Chia lượt thành **4 cửa sổ thời gian** và tính p95 riêng cho từng
 
 Đây là listener **duy nhất** cho bạn xem *nội dung*. Việc phải làm sau lượt Spike:
 
-1. Mở GUI: `jmeter -t test-plans/23127183_Spike_20260820.jmx`
+1. Mở GUI: `jmeter -t test-plans/23127183_Spike_20260821.jmx`
 2. Chạy lại **một lượt ngắn** (30 giây) trong GUI → View Results Tree có dữ liệu
 3. Bấm vào một sample **đỏ** (nếu có) → tab **Response data** → chụp màn hình
 4. Bấm vào sample `07 Login sai` → cho thấy body `{"error":"Invalid email or password"}` với status 401 → **chụp** → đây là bằng chứng "401 là hành vi đúng, không phải lỗi hệ thống"

@@ -26,7 +26,7 @@ const execFileAsync = promisify(execFile);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 
-const API_URL = process.env.API_URL || "http://localhost:3000";
+const API_URL = process.env.API_URL || "http://127.0.0.1:3000";
 const PASSWORD = "Test1234!";
 const BATCH = 20;
 const LOCK_SECONDS = 180;
