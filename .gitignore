@@ -1,0 +1,8 @@
+node_modules/
+*.log.gz
+.DS_Store
+Thumbs.db
+*.tmp
+pack/
+
+# LUU Y: KHONG duoc ignore *.jtl hay results/ - de bai (§11) doi nop raw .jtl DAY DU
