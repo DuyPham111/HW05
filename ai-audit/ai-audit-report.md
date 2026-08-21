@@ -36,11 +36,12 @@
 - **Bằng chứng liên quan:** `docs/endpoint-selection.md` · `server.js:35,46,48,54,56,57,144,160,290-293,302,370,388`
 
 ### [LOG-004] — Sinh `seed-perf-data.mjs` và 5 file CSV data-driven
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-08-21
+- **Prompt:** "sang doc3 cho tôi" (yêu cầu thực hiện `docs/03-DATA-DRIVEN-CSV.md`)
+- **AI Output:** Viết `tools/seed-perf-data.mjs` theo đúng prompt mẫu trong doc: đăng nhập admin, tạo 200 tài khoản hợp lệ + 200 tài khoản mồi lockout theo lô 20 song song, tạo 20.000 sản phẩm, ghi 5 file CSV. Bản nháp đầu tiên dùng chiến lược "register trước, nếu lỗi thì coi là đã tồn tại" đúng như mô tả trong prompt gốc.
+- **Human Review Notes:** *(SV đã kiểm)* — chạy thử ở quy mô nhỏ (`--users 5 --products 15`) trước khi chạy full, rồi chạy lại lần 2 **không reset DB** để kiểm tính idempotent. **Phát hiện bug thật của bản nháp đầu:** lần chạy thứ 2 vẫn báo "tạo mới: 5" thay vì "đã tồn tại: 5" — kiểm bằng `curl` gọi trực tiếp `POST /api/register` với email đã tồn tại thì backend vẫn trả **200 thành công** và tạo dòng mới, không báo lỗi. Đối chiếu `database.js:50-61` xác nhận bảng `users` **không có ràng buộc UNIQUE trên cột `email`** — đây là bug thật của SUT (không phải lỗi giả định sai của prompt gốc). Đã tự sửa script: đổi chiến lược sang "thử login trước — chỉ register khi login thất bại 401" (hàm `ensureAccount`), sau đó reset DB sạch và chạy lại full `--users 200 --products 20000`, xác nhận qua `GET /api/admin/users` không còn email trùng (12 user, 0 duplicate ở lượt test nhỏ). Đã chạy `npm run preflight` sau khi seed xong — **toàn bộ [OK]**, bao gồm cả 5 file CSV và 6 endpoint của workflow. Đã tự kiểm 4 mục còn lại theo checklist docs/03 §5 bằng `curl` trực tiếp (không chỉ tin script tự báo cáo): login bằng dòng 2 của `users.csv` → có token; `search-terms.csv` không chứa `'` `%` `_`; 3 `product_id` ngẫu nhiên trong `products.csv` đều trả JSON có field `id` thật; `total_amount` nhỏ nhất trong `orders.csv` là 600000 (> 500000).
+- **Bằng chứng liên quan:** `tools/seed-perf-data.mjs` · `data/*.csv` (200+200 tài khoản, 500 dòng sản phẩm mẫu, 30 keyword, 50 đơn) · `npm run preflight` toàn `[OK]` · `database.js:50-61` (bug UNIQUE constraint)
 
 ### [LOG-005] — Bước 1: dạy AI về SUT (6 câu hỏi về code)
 - **Tool:**

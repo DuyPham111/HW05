@@ -27,7 +27,7 @@
 
 | ID | Tiêu đề | Loại | Severity | Bằng chứng | GitHub Issue | Status |
 |---|---|---|---|---|---|---|
-| **P1** | | | | | | Open |
+| **P1** | `POST /api/register` không có ràng buộc UNIQUE trên `email` — đăng ký trùng email luôn thành công, tạo tài khoản trùng thay vì báo lỗi | Chức năng | *(điền — gợi ý Medium/High: không crash, nhưng vi phạm bất biến dữ liệu cơ bản của một hệ thống auth)* | Phát hiện khi viết `tools/seed-perf-data.mjs` (docs/03) — gọi lại `POST /api/register` với email đã tồn tại (`perf-u1@hw05.test`) vẫn trả **200** + `id` mới thay vì lỗi. Đối chiếu `database.js:50-61`: bảng `users` không có `UNIQUE` trên cột `email`. Cần chụp ảnh minh họa (2 lần gọi cùng email, 2 `id` khác nhau) trước khi báo Issue chính thức | | Open — *(SV cần: chụp ảnh bằng chứng, viết steps đầy đủ theo mẫu §2, tạo Issue thật ở docs 11)* |
 | **P2** | | | | | | Open |
 | **P3** | | | | | | Open |
 
