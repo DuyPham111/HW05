@@ -44,35 +44,40 @@
 - **Bằng chứng liên quan:** `tools/seed-perf-data.mjs` · `data/*.csv` (200+200 tài khoản, 500 dòng sản phẩm mẫu, 30 keyword, 50 đơn) · `npm run preflight` toàn `[OK]` · `database.js:50-61` (bug UNIQUE constraint)
 
 ### [LOG-005] — Bước 1: dạy AI về SUT (6 câu hỏi về code)
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
-- **Scenario liên quan:** (thiết kế chung cho cả 4)
+- **Tool:** Claude Code (Opus 5)
+- **Date & Time:** 2026-08-21
+- **Prompt:** "Hãy qua docs4 cho tôi , tôi chốt dùng jmeter nên k6 không dùng nên bỏ folder k6 đi nếu có thì nói lại cho tôi biết" — sau đó đi theo đúng quy trình 7 bước của `docs/04-TEST-PLAN-LOAD.md`, bước 1 là 6 câu hỏi về mã nguồn handler (prompt mẫu đầy đủ nằm ở `docs/04` §2).
+- **AI Output:** Trả lời 6 câu, mỗi kết luận kèm số dòng code, và **tự chạy `grep -n` + `curl` để xác minh thay vì trả lời theo trí nhớ**: xác nhận không có `CREATE INDEX` nào; xác nhận `GET /api/products/999999` trả **200 + `{}`**; xác nhận chuỗi lockout thật là **401 → 401 → 403**.
+- **Human Review Notes:** *(SV đã kiểm)* — hai phép đo thực nghiệm ở trên là bằng chứng đo được, không phải suy luận từ đọc code; kết quả `401,401,403` khớp đúng với những gì đã đo tay ở HW02 (bug B001). **Sắc thái phải ghi lại:** "khóa sau 2 lần sai" đúng về trạng thái DB nhưng 403 chỉ enforce từ lần 3 — nếu bỏ qua sắc thái này thì assertion bước 7 sẽ sai.
+- **Scenario liên quan:** thiết kế chung cho cả 4
+- **Bằng chứng liên quan:** `ai-audit/design-log.md` Bước 1 · `server.js:35,48,144,160,290-293,302,370,388`
 
-### [LOG-006] — Bước 2: chốt tham số scenario Load
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
-- **Scenario liên quan:** Load
+### [LOG-006] — Bước 2: chốt tham số 4 scenario
+- **Tool:** Claude Code (Opus 5)
+- **Date & Time:** 2026-08-21
+- **Prompt:** Tiếp nối LOG-005 (không hỏi lại từ đầu) — đề nghị chốt tham số VU / ramp-up / think-time / duration cho từng scenario, kèm ràng buộc: 200 tài khoản trong CSV, load generator cùng máy với SUT, 8 lõi, think-time phải mô phỏng người dùng thật.
+- **AI Output:** Bảng 4 scenario kèm lý do từng con số (chép vào `report/main-report.md` §2.1). Tự nêu ra một hệ quả số học mà đặc tả gốc không nói: think-time ở cấp Thread Group áp dụng trước **mỗi** trong 7 sampler → vòng lặp ~14s → **RPS kỳ vọng của Load chỉ ~10 req/s**.
+- **Human Review Notes:** *(SV đã kiểm)* — chấp nhận mức ~10 RPS là **có chủ đích** sau khi cân nhắc: Load đo tải kỳ vọng của người dùng thật, không đo throughput cực đại (đó là việc của Stress ở 200 VU). Đã yêu cầu ghi rõ cảnh báo này vào báo cáo §2.1 để người chấm không đọc nhầm ~10 RPS thành "hệ thống chỉ chịu được 10 RPS". Đối chứng từ smoke test: search 52ms vs product-detail 2ms — tức tín hiệu read-heavy **vẫn rõ** ngay ở mức tải thấp, nên không cần tăng VU chỉ để có số RPS đẹp.
+- **Scenario liên quan:** Load, Stress, Spike, Soak
 
 ### [LOG-007] — Bước 3–4: `gen-test-plans.py`, JSON extractor, assertion từng bước
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
+- **Tool:** Claude Code (Opus 5)
+- **Date & Time:** 2026-08-21
+- **Prompt:** Tiếp nối LOG-006 — sinh `tools/gen-test-plans.py` (Python 3.10, chỉ thư viện chuẩn) phát ra 4 file `.jmx` JMeter 5.6.3 từ **một** hằng `WORKFLOW` + một hằng `SCENARIOS`; kèm ràng buộc: không dùng plugin ngoài, mọi `CSVDataSet` để `shareMode.all`, bảng assertion riêng cho từng bước (prompt đầy đủ ở `docs/04` §4).
+- **AI Output:** Script ~450 dòng sinh 4 plan đúng tên `23127183_{Load,Stress,Spike,Soak}_20260821.jmx`. Stress dùng **4 `ThreadGroup` chuẩn** cộng dồn bằng `delay`+`duration` thay vì Ultimate Thread Group (plugin `jpgc-casutg` — nếu TA mở trên JMeter sạch sẽ không mở được). **Trong lúc viết đã tự phát hiện 3 lỗi của bản đặc tả gốc**: (1) `users.csv` và `users_lockout.csv` cùng có cột `email` → va chạm biến, im lặng ghi đè; (2) `datadir` mặc định `../data` trỏ ra ngoài repo; (3) nguồn `user_id` nhập nhằng giữa cột CSV và giá trị trích từ response.
+- **Human Review Notes:** *(SV đã kiểm)* — đồng ý cả 3 cách sửa: đổi biến thành `lock_email`, đổi `datadir` mặc định thành `data`, và dùng `${uid}` trích từ response bước 1 (chắc chắn khớp với `${token}` đang cầm) thay vì cột CSV. Đã yêu cầu ghi cả 3 vào bảng human review §2.4 **kèm cột "plan có báo lỗi không"** — vì lỗi (1) và (3) thuộc loại plan vẫn chạy 0% error, tức nguy hiểm hơn hẳn lỗi làm plan gãy ngay. Đã cập nhật ngược lại `docs/03` và `docs/04` để bản hướng dẫn không còn giữ đặc tả sai.
+- **Scenario liên quan:** cả 4
+- **Bằng chứng liên quan:** `tools/gen-test-plans.py` · `test-plans/*.jmx` · `docs/03` §4 (cảnh báo va chạm tên biến)
 
-### [LOG-008] — Bước 6: smoke test 40 giây và các lỗi phát hiện
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
-- **File `.jtl` sinh ra:** `results/jtl/smoke-….jtl`
+### [LOG-008] — Bước 6: smoke test 40 giây và ba phép kiểm chống assertion vô nghĩa
+- **Tool:** Claude Code (Opus 5)
+- **Date & Time:** 2026-08-21
+- **Prompt:** Tiếp nối LOG-007 — chạy smoke test 2 VU × 40s theo `docs/04` §6, đọc `.jtl`, sửa tới khi mọi lỗi còn lại đều giải thích được bằng thiết kế.
+- **AI Output:** Smoke chạy **22 sample, 0% error**, đủ 7 sampler; bước 7 trả `401` với `success=true` → xác nhận Response Assertion `401|403` + Ignore Status hoạt động. **Không dừng ở "0% error nên chắc đúng"**, chạy thêm 3 phép kiểm: (a) cột `.jtl` có dữ liệu thật — `Latency=80`, `allThreads=1`, `Connect=56`; (b) `grep -c NOT_FOUND` = 0 → extractor không thất bại thầm lặng; (c) **cố tình phá assertion để kiểm nó có bắt được gì không** — sửa bước 3 thành `/api/products/999999` → `code=200 success=false` với `failureMessage="Test failed: text expected to contain /"id"/"`, và trỏ bước 7 vào tài khoản đang bị khóa → `code=403 success=true`.
+- **Human Review Notes:** *(SV đã kiểm)* — phép kiểm (c) là phép quan trọng nhất và là thứ **SV yêu cầu làm thêm** ngoài quy trình trong doc: một assertion luôn pass thì vô giá trị, và cách duy nhất để biết nó có tác dụng là làm cho nó **fail có chủ đích**. Kết quả chứng minh cả hai assertion khó nhất (bẫy 200+`{}` ở bước 3, và nhánh 403 ở bước 7) đều hoạt động đúng. Giữ lại file smoke `results/jtl/smoke-load-20260821.jtl` làm bằng chứng thay vì xóa. *(SV chưa tự kiểm)* — chưa mở 4 file `.jmx` bằng JMeter GUI để xem cây element bằng mắt; sẽ làm khi quay video demo (`docs/12` §3 phần 3).
+- **Scenario liên quan:** Load (bản smoke)
+- **File `.jtl` sinh ra:** `results/jtl/smoke-load-20260821.jtl`
+- **Con số nào trong báo cáo đến từ lượt này:** bảng phép kiểm ở §2.4; chưa có con số hiệu năng chính thức nào (smoke không dùng để báo cáo p95)
 
 ### [LOG-009] — Thêm scenario Stress (4 bậc, không dùng plugin)
 - **Tool:**

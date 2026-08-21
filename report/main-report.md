@@ -55,12 +55,17 @@ Chi tiết đầy đủ (số dòng code, lý do từng bước, lựa chọn b�
 
 | Scenario | VU | Ramp-up | Think-time | Thời lượng | Listener | Lý do chọn |
 |---|---|---|---|---|---|---|
-| Load | 20 | 60s | 1–3s | 360s | Summary Report | |
-| Stress | 25→50→100→200 (4 bậc × 60s) | mỗi bậc 10–20s | 0,3–1s | ~480s | Aggregate Report | |
-| Spike | 10 nền + 200 trong 5s | 5s | 0–0,5s | 240s | View Results Tree | |
-| Soak | 20 | 60s | 1–2s | 720s | Summary Report | |
+| Load | 20 | 60s | 1–3s | 360s | Summary Report | Tải kỳ vọng của shop demo. 20 VU đủ tạo tín hiệu mà không bão hòa CPU của chính JMeter (generator cùng máy). Ramp 60s = 1 VU/3s, tránh "cú đấm" làm p95 30 giây đầu vô nghĩa. 360s = 60s ramp + ~300s ổn định → cửa sổ tính p95 đủ dài. |
+| Stress | 25→50→100→200 (4 bậc, cộng dồn) | 10–20s/bậc | 0,3–1s | ~480s | Aggregate Report | Bậc rời rạc cho **4 con số p95 so sánh được** để định vị điểm gãy; ramp tuyến tính chỉ cho một đường cong mượt không chỉ ra được bậc nào gãy. Think-time giảm còn 0,3–1s để ép tải cao hơn với cùng số VU. 200 VU là trần vì CSV có đúng 200 tài khoản. |
+| Spike | 10 nền + 200 trong 5s | 5s | 0–0,5s | 240s | View Results Tree | 60s nền **trước** để có baseline đo trên cùng lượt; 145s nền **sau** để đo hồi phục — đây mới là phần §6 chấm. Ramp 5s (không phải 0) vì dựng 200 thread trong một tick thì chi phí khởi tạo thread của JMeter lấn át tín hiệu. |
+| Soak | 20 | 60s | 1–2s | 720s | Summary Report | Cùng mức VU với Load để so trực tiếp lượt 6 phút với lượt 12 phút. 12 phút nằm trong khoảng 10–15 phút §6 yêu cầu. |
 
-*(Ghi rõ tham số nào suy từ code, cái nào là quy ước, cái nào đã sửa lại sau smoke test.)*
+**Tham số nào từ đâu:**
+- **Suy từ code:** trần 200 VU (số dòng `users.csv`, để không có 2 VU dùng chung 1 tài khoản → tránh tranh chấp ghi trên cùng dòng `users`); think-time Stress thấp hơn Load.
+- **Quy ước ngành:** ramp-up ≈ 1/6 thời lượng; think-time 1–3s cho hành vi duyệt web thật; soak 10–15 phút.
+- **Đã sửa sau smoke test:** `datadir` mặc định `../data` → **`data`** (JMeter được gọi từ thư mục gốc repo, `../data` trỏ ra ngoài repo).
+
+> **Lưu ý khi đọc RPS của lượt Load.** Think-time đặt ở cấp Thread Group nên áp dụng trước **mỗi** trong 7 sampler → một vòng lặp mất ~14 giây, và 20 VU cho RPS kỳ vọng chỉ **~10 req/s**. Đây là **cố ý**: Load mô phỏng tải người dùng thật đang duyệt shop, **không** phải đo throughput cực đại — việc đó là của Stress. Đọc con số ~10 RPS thành "hệ thống chỉ chịu được 10 RPS" là sai.
 
 ## 2.2 Kết quả — tổng quan
 
@@ -93,12 +98,25 @@ Chi tiết đầy đủ (số dòng code, lý do từng bước, lựa chọn b�
 
 ## 2.4 Human review — AI sai gì, vì sao (§6 chấm mục này)
 
-| # | AI sai/sót gì | Bằng chứng | Sửa thành | **Vì sao AI sót** |
-|---|---|---|---|---|
-| 1 | | | | *(chất lượng prompt / giới hạn mô hình / đặc điểm endpoint)* |
-| 2 | | | | |
+| # | AI sai/sót gì | Bằng chứng | Sửa thành | **Vì sao AI sót** | Plan có báo lỗi không? |
+|---|---|---|---|---|---|
+| 1 | Đặc tả CSV ở bản thiết kế ban đầu để **cả `users.csv` lẫn `users_lockout.csv` cùng có cột tên `email`** | Hai `CSVDataSet` cùng khai báo biến `email` → cái nạp sau ghi đè cái nạp trước; bước 1 sẽ đăng nhập bằng email tài khoản **mồi** kèm mật khẩu đúng | Đổi tên biến của `users_lockout.csv` thành **`lock_email,wrong_password`** | **Chất lượng prompt** — bản đặc tả liệt kê header từng file riêng lẻ, không ai đối chiếu chéo xem có trùng tên biến giữa các file không | ❌ **Không** — JMeter ghi đè biến im lặng, plan vẫn chạy 0% error |
+| 2 | Bảng assertion ban đầu ghi bước 7 *"code `401` = THÀNH CÔNG"* | Đo thật: 3 lần đăng nhập sai liên tiếp cho **401 → 401 → 403**. Nếu assertion chỉ nhận `401` thì từ lần thứ 3 trở đi mọi sample bước 7 bị tính là **lỗi** | Response Assertion regex **`401\|403`** + tick *Ignore Status* | **Đặc điểm endpoint** — `+2`/lần và ngưỡng `>=3` làm khóa được SET ở lần 2 nhưng chỉ **enforce** từ lần 3, vì `server.js:40` kiểm `locked_until` ở đầu request bằng trạng thái đã lưu từ trước | ✅ Có — nhưng chỉ sau khi tài khoản mồi bị khóa, tức **giữa lượt**, không lộ ra ở smoke ngắn |
+| 3 | `datadir` mặc định đặt là `../data` | JMeter được gọi từ thư mục gốc repo → `../data` trỏ ra **ngoài** repo, không tìm thấy file | Đổi mặc định thành **`data`** | **Chất lượng prompt** — bản đặc tả không nói rõ CWD lúc chạy là thư mục nào | ✅ Có — CSV rỗng, mọi biến thành literal `${email}` |
+| 4 | Assertion bước 3 ban đầu chỉ kiểm HTTP status 200 | `GET /api/products/999999` trả **200 + `{}`** (`server.js:160-161`) → assertion status-only **luôn pass**, và ta đo nhầm chi phí của một truy vấn miss | Thêm assertion body **chứa `"id"`**. Kiểm chứng bằng cách cố tình sửa bước 3 thành id `999999`: kết quả `code=200 success=false`, `failureMessage="Test failed: text expected to contain /"id"/"` | **Đặc điểm endpoint** — trả 200 cho not-found là bất thường, không suy ra được từ quy ước REST | ❌ **Không** — đây là loại nguy hiểm nhất: pass mà vô nghĩa |
+| 5 | Nguồn `user_id` cho bước 5 nhập nhằng: `users.csv` có cột `user_id`, mà bước 1 cũng trích được `$.user.id` | Dùng giá trị CSV có rủi ro lệch với `${token}` đang cầm nếu hai nguồn phân kỳ | Dùng **`${uid}` trích từ response** bước 1; đổi cột CSV thành `csv_user_id` và giữ làm đối chứng | **Chất lượng prompt** — đặc tả đưa ra hai nguồn cho cùng một giá trị mà không nói lấy cái nào | ❌ **Không** — cả hai nguồn đều cho số hợp lệ trong điều kiện bình thường |
+| 6 | Mô tả lockout trong tài liệu thiết kế ghi gọn *"khóa sau 2 lần sai"* | Đúng về **trạng thái DB** (lần 2 làm `login_attempts`=4 ≥ 3 nên `locked_until` được SET) nhưng **403 chỉ xuất hiện từ lần 3** | Tách bạch hai phát biểu trong tài liệu và trong thiết kế assertion | **Đặc điểm endpoint** — lỗi về **thứ tự** xử lý (kiểm-khóa-trước rồi mới xử-lý-mật-khẩu-sau), giống hệt loại lỗi đã ghi ở HW02 | ❌ **Không** — nhưng nó là nguyên nhân gốc của lỗi #2 |
 
-*(Mẫu đầy đủ ở `docs/04-TEST-PLAN-LOAD.md` §7. Ghi cả những lỗi KHÔNG làm test plan báo lỗi — đó là loại nguy hiểm nhất.)*
+**Tổng: 6 lỗi** — chất lượng prompt **3** · đặc điểm endpoint **3** · giới hạn mô hình **0**.
+
+> **Điều đáng nói nhất:** **4/6 lỗi không làm test plan báo lỗi** — plan vẫn chạy 0% error với chúng. Chúng chỉ lộ ra khi (a) đọc kỹ tên biến giữa các file CSV, và (b) **cố tình phá assertion để kiểm nó có thật sự bắt được gì không**. Nếu chỉ nhìn "smoke test 0% error → plan đúng" thì cả 4 lỗi này đi thẳng vào bộ số liệu cuối cùng.
+
+**Hai phép kiểm đã dùng để chứng minh assertion không vô nghĩa** (không dừng ở "0% error nên chắc đúng"):
+
+| Phép kiểm | Cách làm | Kết quả |
+|---|---|---|
+| Assertion bước 3 có thật sự bắt được bẫy 200+`{}`? | Sửa path thành `/api/products/999999`, chạy 20s | `code=200 success=false` — **bắt được** |
+| Assertion bước 7 có nhận cả nhánh 403 không? | Trỏ `lock_email` vào tài khoản đang bị khóa, chạy 18s | `code=403 success=true`, error 0% — **nhận đúng** |
 
 ## 2.5 Bằng chứng chạy
 
