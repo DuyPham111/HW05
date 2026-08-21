@@ -401,8 +401,8 @@
         <stringProp name="ThreadGroup.num_threads">25</stringProp>
         <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">360</stringProp>
-        <stringProp name="ThreadGroup.delay">60</stringProp>
+        <stringProp name="ThreadGroup.duration">330</stringProp>
+        <stringProp name="ThreadGroup.delay">90</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
       </ThreadGroup>
       <hashTree>
@@ -699,8 +699,8 @@
         <stringProp name="ThreadGroup.num_threads">50</stringProp>
         <stringProp name="ThreadGroup.ramp_time">15</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">300</stringProp>
-        <stringProp name="ThreadGroup.delay">120</stringProp>
+        <stringProp name="ThreadGroup.duration">240</stringProp>
+        <stringProp name="ThreadGroup.delay">180</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
       </ThreadGroup>
       <hashTree>
@@ -997,8 +997,8 @@
         <stringProp name="ThreadGroup.num_threads">100</stringProp>
         <stringProp name="ThreadGroup.ramp_time">20</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">240</stringProp>
-        <stringProp name="ThreadGroup.delay">180</stringProp>
+        <stringProp name="ThreadGroup.duration">150</stringProp>
+        <stringProp name="ThreadGroup.delay">270</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
       </ThreadGroup>
       <hashTree>

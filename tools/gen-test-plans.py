@@ -163,13 +163,22 @@ SCENARIOS = {
         "timer": (1000, 2000),      # think-time 1-3s
         "listener": "summary",
     },
+    # Bac cong don: moi bac them thread vao so dang chay, TAT CA cung ket thuc o t=420s.
+    # Chon buoc bac 90s (khong phai 60s) vi ramp cua bac 4 mat 20s -> neu bac chi 60s thi
+    # cua so ON DINH cua bac 4 chi con 40s, qua ngan de tinh p95 dang tin cay.
+    # Voi 90s: bac 4 co 70s on dinh, va cac bac 1-3 deu co >= 75s.
+    #
+    #   bac 1: t=  0..420   25 VU   -> cua so on dinh  10.. 90  (25 VU)
+    #   bac 2: t= 90..420  +25=50   -> cua so on dinh 100..180  (50 VU)
+    #   bac 3: t=180..420  +50=100  -> cua so on dinh 195..270  (100 VU)
+    #   bac 4: t=270..420 +100=200  -> cua so on dinh 290..420  (200 VU)
     "Stress": {
         "desc": "Tang tai theo bac de tim diem gay",
         "thread_groups": [
             {"name": "Bac 1 - 25 VU",          "threads": 25,  "ramp": 10, "duration": 420, "delay": 0},
-            {"name": "Bac 2 - them 25 (=50)",  "threads": 25,  "ramp": 10, "duration": 360, "delay": 60},
-            {"name": "Bac 3 - them 50 (=100)", "threads": 50,  "ramp": 15, "duration": 300, "delay": 120},
-            {"name": "Bac 4 - them 100 (=200)","threads": 100, "ramp": 20, "duration": 240, "delay": 180},
+            {"name": "Bac 2 - them 25 (=50)",  "threads": 25,  "ramp": 10, "duration": 330, "delay": 90},
+            {"name": "Bac 3 - them 50 (=100)", "threads": 50,  "ramp": 15, "duration": 240, "delay": 180},
+            {"name": "Bac 4 - them 100 (=200)","threads": 100, "ramp": 20, "duration": 150, "delay": 270},
         ],
         "timer": (300, 700),        # think-time 0.3-1s, ep tai cao hon
         "listener": "aggregate",

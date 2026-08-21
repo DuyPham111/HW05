@@ -79,13 +79,14 @@
 - **File `.jtl` sinh ra:** `results/jtl/smoke-load-20260821.jtl`
 - **Con số nào trong báo cáo đến từ lượt này:** bảng phép kiểm ở §2.4; chưa có con số hiệu năng chính thức nào (smoke không dùng để báo cáo p95)
 
-### [LOG-009] — Thêm scenario Stress (4 bậc, không dùng plugin)
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
-- **Scenario liên quan:** Stress
+### [LOG-009] — Bước Stress: rà lại bậc tải, kiểm chứng cơ chế, và `reset-lockout.mjs`
+- **Tool:** Claude Code (Opus 5)
+- **Date & Time:** 2026-08-21
+- **Prompt:** "sang docs5 trước dồn lại làm sau và nhớ note lại việc k6 lấy điểm cộng" — thực hiện `docs/05-TEST-PLAN-STRESS.md`, hoãn `docs/07` lại làm sau.
+- **AI Output:** (1) Rà lại 4 bậc của plan Stress đã sinh ở LOG-007 và **phát hiện bộ số không khớp ý định**: đặc tả ghi "mỗi bậc 60s" nhưng `delay` 0/60/120/180 + `duration` 420/360/300/240 làm bậc 1–3 chỉ được 60s còn **bậc 4 chiếm 240s**, và cửa sổ *ổn định* của bậc 4 (sau ramp 20s) quá ngắn. Sửa thành bước **90 giây** (`delay` 0/90/180/270, `duration` 420/330/240/150) → mọi bậc có ≥ 70s ổn định, tổng 420s. (2) **Kiểm chứng ngữ nghĩa `delay`/`duration` của JMeter bằng thực nghiệm** thay vì tin theo tài liệu: chạy bản thu nhỏ 3→6→12→24 VU, đọc cột `allThreads` theo cửa sổ 5 giây — xác nhận thread cộng dồn đúng bậc và cả 4 nhóm kết thúc cùng lúc. (3) Viết `tools/reset-lockout.mjs` (doc 5 §2.1 cần, tuy thuộc doc 7) với 4 chế độ: mặc định / `--check` / `--wait` / `--hard`. (4) Tạo `docs/TODO-CON-LAI.md` theo dõi việc đang hoãn, trong đó ghi rõ **k6 là điểm cộng §8** để không quên.
+- **Human Review Notes:** *(SV đã kiểm)* — yêu cầu sửa `--check` sau khi phát hiện bản đầu **vi phạm chính đặc tả của nó**: doc ghi *"chỉ báo cáo, không đăng nhập nhiều lần"* nhưng bản đầu gọi `POST /api/login` 400 lần, mà login đúng lại **reset `login_attempts` về 0** (`server.js:48`) — tức phép đo làm thay đổi thứ đang đo. Đã đổi sang đọc `GET /api/admin/users` (trả thẳng `login_attempts` và `locked_until`, không đụng gì). Kiểm chứng: chạy `--check` hai lần liên tiếp cho kết quả **giống hệt** kể cả `login_attempts=6` — nếu còn dùng login thì lần 2 đã về 0. Con số `login_attempts=6` sau 3 lần sai cũng là bằng chứng độc lập xác nhận cơ chế `+2`/lần. Sau đó chạy `--wait` mở khóa toàn bộ **400/400** tài khoản, xác nhận lại bằng `--check` = 0 tài khoản khóa.
+- **Scenario liên quan:** Stress (và dùng chung cho Spike, Soak)
+- **Bằng chứng liên quan:** `tools/reset-lockout.mjs` · `tools/gen-test-plans.py` hằng `SCENARIOS["Stress"]` · `docs/05` §1 · `report/main-report.md` §2.4 dòng 7
 
 ### [LOG-010] — Thêm scenario Spike (2 thread group)
 - **Tool:**

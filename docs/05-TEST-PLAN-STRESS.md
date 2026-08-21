@@ -1,7 +1,7 @@
 # 05 — Task 1: Stress test plan (20đ)
 
 > Load hỏi *"hệ thống chạy thế nào ở tải kỳ vọng?"*. Stress hỏi **"nó gãy ở đâu?"** — và câu trả lời phải là **một điểm cụ thể**, không phải "chịu tải tốt".
-> Output: `test-plans/23127183_Stress_20260820.jmx` + lượt chạy + mục §2.2 báo cáo.
+> Output: `test-plans/23127183_Stress_20260821.jmx` + lượt chạy + mục §2.2 báo cáo.
 
 ---
 
@@ -13,14 +13,14 @@ Cùng workflow 7 bước, cùng CSV, cùng assertion. Chỉ đổi cách sinh t�
 |---|---|---|
 | Mục tiêu | p95 ở trạng thái ổn định | **tìm bậc mà hệ thống bắt đầu gãy** |
 | VU | 20 cố định | **25 → 50 → 100 → 200 theo bậc** |
-| Mỗi bậc | — | 60 giây |
+| Bước giữa các bậc | — | **90 giây** (xem lý do ở §1) |
 | Think-time | 1–3s | **0,3–1s** (ép tải cao hơn với cùng số VU) |
-| Tổng thời lượng | 360s | ~480s (4 bậc × 60s + ramp + đuôi) |
+| Tổng thời lượng | 360s | **420s** (4 bậc × 90s bước, cả 4 nhóm kết thúc ở t=420s) |
 | Listener | Summary Report | **Aggregate Report** (cần cột percentile) |
 
 ### Vì sao phải là **bậc**, không phải ramp tuyến tính lên 200
 
-Ramp tuyến tính 0→200 trong 8 phút thì mỗi thời điểm là một mức tải khác nhau → bạn có một đường cong mượt và **không chỉ được** ra bậc nào là điểm gãy. Với 4 bậc, mỗi bậc 60 giây ổn định, bạn có **4 con số p95 rời rạc** so sánh được với nhau:
+Ramp tuyến tính 0→200 trong 7 phút thì mỗi thời điểm là một mức tải khác nhau → bạn có một đường cong mượt và **không chỉ được** ra bậc nào là điểm gãy. Với 4 bậc, mỗi bậc có một cửa sổ ổn định ≥ 70 giây, bạn có **4 con số p95 rời rạc** so sánh được với nhau:
 
 ```
 p95 theo bậc:  25 VU → ?ms   50 VU → ?ms   100 VU → ?ms   200 VU → ?ms
@@ -32,14 +32,18 @@ Nếu p95 tăng gần tuyến tính theo VU thì hệ thống còn dư địa. N
 
 Trong `tools/gen-test-plans.py`, scenario `Stress` sinh **4 `ThreadGroup` song song trong cùng Test Plan**, mỗi cái có:
 
-| Bậc | num_threads | ramp_time | **delay khởi động** | duration |
-|---|---|---|---|---|
-| 1 | 25 | 10s | 0s | 420s |
-| 2 | 25 (cộng dồn → 50) | 10s | 60s | 360s |
-| 3 | 50 (cộng dồn → 100) | 15s | 120s | 300s |
-| 4 | 100 (cộng dồn → 200) | 20s | 180s | 240s |
+| Bậc | num_threads | ramp_time | **delay khởi động** | duration | Cửa sổ **ổn định** (dùng để tính p95) |
+|---|---|---|---|---|---|
+| 1 | 25 | 10s | 0s | 420s | t = 10…90s → **25 VU** |
+| 2 | 25 (cộng dồn → 50) | 10s | **90s** | 330s | t = 100…180s → **50 VU** |
+| 3 | 50 (cộng dồn → 100) | 15s | **180s** | 240s | t = 195…270s → **100 VU** |
+| 4 | 100 (cộng dồn → 200) | 20s | **270s** | 150s | t = 290…420s → **200 VU** |
 
-Dùng `Scheduler` với `delay` + `duration` trên từng ThreadGroup. **Cộng dồn** chứ không thay thế — tại giây thứ 200 có đủ 25+25+50+100 = 200 VU đang chạy.
+Dùng `Scheduler` với `delay` + `duration` trên từng ThreadGroup. **Cộng dồn** chứ không thay thế — cả 4 nhóm cùng kết thúc ở **t = 420s**, nên từ giây 270 trở đi có đủ 25+25+50+100 = **200 VU** đang chạy.
+
+> **Vì sao bước bậc là 90 giây chứ không phải 60.** Bậc 4 ramp 100 thread mất 20 giây. Nếu mỗi bậc chỉ 60s thì cửa sổ **ổn định** của bậc 4 chỉ còn 40 giây — quá ngắn để tính p95 đáng tin, và phần lớn sample rơi vào giai đoạn đang ramp (tải chưa đạt mức danh nghĩa). Với bước 90s, bậc 4 có **70 giây ổn định** và các bậc 1–3 đều ≥ 75 giây. Đây là lỗi đã bắt được khi rà lại plan — xem bảng human review §2.4 dòng 7.
+
+**Đã kiểm chứng cơ chế bằng thực nghiệm** (không tin suông vào ngữ nghĩa `delay`/`duration` của JMeter): chạy một bản thu nhỏ 3→6→12→24 VU, đọc cột `allThreads` trong `.jtl` theo cửa sổ 5 giây — số thread thật sự cộng dồn đúng theo bậc và cả 4 nhóm kết thúc cùng lúc.
 
 > **Đừng dùng "Ultimate Thread Group"** của plugin JMeter Plugins — nó đòi cài `jpgc-casutg`, và nếu TA mở `.jmx` trên máy không có plugin thì file **không mở được**. Bốn ThreadGroup chuẩn thì mở được ở mọi bản JMeter.
 
@@ -85,7 +89,7 @@ cd "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing" && node
 
 **Trong lúc chạy — việc của bạn:**
 1. Task Manager mở sẵn cạnh cửa sổ terminal, tab **Details**, sắp xếp theo CPU, thấy rõ dòng `node.exe` và `java.exe`.
-2. **Chụp màn hình đúng lúc đang ở bậc 200 VU** — tức khoảng **giây thứ 200–230** kể từ lúc bắt đầu. Đây là ảnh có giá trị nhất của cả bài: nó bắt được `node.exe` ở mức CPU cao nhất.
+2. **Chụp màn hình đúng lúc đang ở bậc 200 VU** — tức khoảng **giây thứ 300–400** kể từ lúc bắt đầu (bậc 4 bắt đầu ở t=270s, ramp xong ở t=290s). Đây là ảnh có giá trị nhất của cả bài: nó bắt được `node.exe` ở mức CPU cao nhất.
 3. Lưu `resource-monitor/screenshots/taskmgr-stress.png`.
 
 ---
