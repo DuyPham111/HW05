@@ -7,13 +7,13 @@
 - **Sinh viên:** Phạm Vũ Ngọc Duy — **MSSV:** 23127183 — **Nhóm:** 10
 - **Môn:** Kiểm thử phần mềm — **Bài:** HW05-AI Performance Testing
 - **SUT:** EShop — https://github.com/ttbhanh/eshop-sut
-- **Công cụ:** Apache JMeter 5.6.3 (mặc định §8) · k6 (bonus) · Task Manager (resource monitor) · Claude Code (AI)
+- **Công cụ:** Apache JMeter 5.6.3 (mặc định §8) · Task Manager (resource monitor) · Claude Code (AI)
 
 ## Liên kết
 
 | | |
 |---|---|
-| **Repo bài làm (public)** | https://github.com/DuyPham111/HW05-Performance-Testing *(kiểm bằng cửa sổ ẩn danh)* |
+| **Repo bài làm (public)** | https://github.com/DuyPham111/HW05 *(kiểm bằng cửa sổ ẩn danh)* |
 | **GitHub Issues** | *(điền link từng Issue)* |
 | **Video demo (≥6 phút, unlisted)** | *(điền link + thời lượng thật, vd `11:42`)* |
 | **Báo cáo chính** | [report/main-report.md](report/main-report.md) |
@@ -135,7 +135,6 @@ report/              main-report.md — Task 1 + 2 + 3 trong MỘT báo cáo (§
 ai-audit/            audit report · critique · design-log · task2 output nguyên văn
 bug-report/          bug-report.md + screenshots + verify-bugs.mjs
 ci/ .github/         bằng chứng Task 3 đã chạy CI thật
-k6/                  bonus §8 — mirror cùng workflow
 tools/               preflight · seed · gen-test-plans · run-scenario · summarize · drift · reset-lockout
 .claude/skills/      4 Agent Skill (§7)
 docs/                17 file hướng dẫn quy trình làm bài

@@ -152,7 +152,7 @@ AI **không** tạo Issue thay bạn được (không có quyền trên tài kho
 Nếu có `gh` CLI thì nhanh hơn:
 
 ```bash
-gh issue create --repo DuyPham111/HW05-Performance-Testing --title "[PERF][P1] GET /api/products?search noi chuoi SQL - HTTP 500 va SQL injection" --body-file bug-report/issue-p1.md
+gh issue create --repo DuyPham111/HW05 --title "[PERF][P1] GET /api/products?search noi chuoi SQL - HTTP 500 va SQL injection" --body-file bug-report/issue-p1.md
 ```
 
 Mỗi Issue phải có: bước tái lập, expected/actual, **ảnh nhúng sẵn** (kéo thả ảnh vào ô soạn Issue để GitHub tự upload), và trích số dòng code. Sau khi tạo, **dán link thật** vào cột "GitHub Issue" của `bug-report.md` — cột này để trống là mất điểm.

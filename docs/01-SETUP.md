@@ -1,7 +1,7 @@
 # 01 — Setup: JMeter trên Windows, SUT, preflight
 
 > Mục tiêu buổi 1 (phần đầu): gõ `npm run preflight` ra **toàn `[OK]`**.
-> Máy bạn (đã kiểm): Java **Temurin 17** ✔ · Node **v22.16** ✔ · Python **3.10.6** ✔ · k6 **đã cài** ✔ · **JMeter chưa có** ✘ · hostname **`Pham_Vu_Ngoc_Duy`** (khớp HW trước — §11 kiểm đúng chỗ này).
+> Máy bạn (đã kiểm): Java **Temurin 17** ✔ · Node **v22.16** ✔ · Python **3.10.6** ✔ · **JMeter chưa có** ✘ · hostname **`Pham_Vu_Ngoc_Duy`** (khớp HW trước — §11 kiểm đúng chỗ này).
 
 ---
 
@@ -100,7 +100,7 @@ cd "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing" && git 
 Tạo repo **public** trên GitHub tên `HW05-Performance-Testing` (§14 đòi link repo công khai) rồi:
 
 ```bash
-git remote add origin https://github.com/DuyPham111/HW05-Performance-Testing.git && git branch -M main && git push -u origin main
+git remote add origin https://github.com/DuyPham111/HW05.git && git branch -M main && git push -u origin main
 ```
 
 Thêm `.gitignore` (raw `.jtl` **phải commit**, chỉ loại rác):

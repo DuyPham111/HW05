@@ -148,7 +148,6 @@ HW05-Performance-Testing/
 ├── ai-audit/                      ← ai-audit-report.md · ai-critique.md · design-log.md · task2-ai-output-verbatim.md
 ├── bug-report/                    ← bug-report.md + screenshots/ + link GitHub Issues
 ├── ci/ci-runs.md · .github/workflows/perf-smoke.yml   ← bằng chứng Task 3 đã chạy thật
-├── k6/                            ← bonus §8: mirror cùng workflow bằng k6
 ├── git-log/commit-log.txt
 ├── tools/                         ← preflight · seed · gen-test-plans · run-scenario · sample-resources · summarize · drift · reset-lockout
 ├── .claude/skills/                ← §7: 4 Agent Skill

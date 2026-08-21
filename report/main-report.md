@@ -6,7 +6,7 @@
 **Họ và tên:** Phạm Vũ Ngọc Duy · **MSSV:** 23127183 · **Nhóm:** 10
 **Ngày thực hiện:** …/08/2026 → …/08/2026
 **SUT:** EShop — https://github.com/ttbhanh/eshop-sut · backend `http://localhost:3000/api`
-**Công cụ:** Apache JMeter 5.6.3 · Java Temurin 17 · Node v22.16 · Task Manager · k6 (bonus)
+**Công cụ:** Apache JMeter 5.6.3 · Java Temurin 17 · Node v22.16 · Task Manager
 **Máy đo:** Windows 11, hostname `Pham_Vu_Ngoc_Duy` — xem [`resource-monitor/hardware-report.md`](../resource-monitor/hardware-report.md)
 
 **Khai báo AI (§9):** *"I use AI tools for the following tasks."* — nhật ký đầy đủ ở [`ai-audit/ai-audit-report.md`](../ai-audit/ai-audit-report.md).

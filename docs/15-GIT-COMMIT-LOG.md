@@ -86,7 +86,7 @@ cd "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing" && git 
 
 ```
 # Git commit log - HW05 Performance Testing - 23127183 Pham Vu Ngoc Duy
-# Xuat luc: <ngày giờ>  |  Repo: https://github.com/DuyPham111/HW05-Performance-Testing
+# Xuat luc: <ngày giờ>  |  Repo: https://github.com/DuyPham111/HW05
 # Ghi chu: commit cuoi cung ("docs: xuat git commit log") khong xuat hien trong file nay
 #          vi file duoc sinh ra TRUOC khi commit no. Xem lich su day du tren GitHub.
 ```
