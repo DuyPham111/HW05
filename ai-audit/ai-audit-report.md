@@ -123,19 +123,19 @@
 - **File `.jtl` sinh ra:** `endurance/jtl/…`
 
 ### [LOG-014] — **Task 2: AI phân tích raw `.jtl`** ⭐
-- **Tool:**
-- **Date & Time:**
-- **Prompt:** *(nguyên văn — dán đầy đủ)*
-- **AI Output:** giữ **nguyên văn** tại [`task2-ai-output-verbatim.md`](task2-ai-output-verbatim.md)
-- **Human Review Notes:** *(liệt kê từng nhận định đã soát, chỉ ra chỗ sai kèm giá trị đúng từ raw)*
+- **Tool:** Claude (phiên phân tích độc lập — cố tình không mang theo ngữ cảnh của các LOG trước để đóng vai "AI mới nhìn dữ liệu lần đầu")
+- **Date & Time:** 2026-08-22
+- **Prompt:** nguyên văn — dán đầy đủ `results/summary.md`, 200 dòng đầu `results/jtl/23127183_Stress_20260822-191048.jtl`, toàn bộ `results/resources/23127183_Stress_20260822-191048.resources.csv` (634 dòng), kèm 5 câu hỏi phân tích. Xem toàn văn tại [`task2-ai-output-verbatim.md`](task2-ai-output-verbatim.md) mục Output A.
+- **AI Output:** giữ **nguyên văn** tại [`task2-ai-output-verbatim.md`](task2-ai-output-verbatim.md) — 5 nhận định: error rate thô "đáng lo ngại", endpoint đắt nhất là Apply-coupon/Search, hệ thống "ổn định xuyên suốt 25→200 VU", đề xuất SLO (p95≤300ms, error≤1%, RPS tối thiểu 140), và từ chối trả lời câu rò rỉ bộ nhớ vì thiếu dữ liệu.
+- **Human Review Notes:** *(SV đã kiểm)* — soát cả 5 nhận định bằng lệnh `awk`/`grep` trực tiếp trên raw `.jtl`, phát hiện **6 lỗi đọc metric** (bảng đầy đủ ở `report/main-report.md` §3.2): (1) gộp 401/403 lockout vào error rate chung — thật ra 100% trong 8.430 sample "lỗi" thuộc bước 7 cố ý, error thật 0%; (2) dùng avg=88,7ms che mất p99=419ms/max=976ms; (3) so sánh sample count Soak-vs-Load không chuẩn hóa thời lượng (Soak chạy gấp đôi Load); (4) kết luận "ổn định xuyên suốt" chỉ từ p95 tổng thể, không cắt theo bậc — cắt bằng `--windows` cho thấy p95 tăng từ 20ms lên 340ms (17 lần) qua 4 bậc; (5) đề xuất SLO RPS tối thiểu trùng đúng mức bão hòa CPU (117,1%); (6) bỏ qua hoàn toàn việc kiểm CPU `java.exe` dù dữ liệu có sẵn trong prompt — không sai ở lượt Stress này nhưng là lỗ hổng phương pháp thật (đảo chiều ở Soak). Cũng ghi nhận điểm AI làm đúng: từ chối suy đoán về rò rỉ bộ nhớ khi thiếu dữ liệu Soak.
 - **Con số nào trong báo cáo đến từ lượt này:** §3.1, §3.2
 
 ### [LOG-015] — **Task 2: AI đề xuất tối ưu + phân loại feasible/hallucinated** ⭐
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:** *(nguyên văn tại `task2-ai-output-verbatim.md`)*
-- **Human Review Notes:**
+- **Tool:** Claude (tiếp nối LOG-014, cùng phiên)
+- **Date & Time:** 2026-08-22
+- **Prompt:** dán các đoạn handler liên quan của `server.js`/`database.js` (login, search, cart, apply-coupon, checkout, không có `PRAGMA`/`CREATE INDEX` nào), yêu cầu 5 đề xuất tối ưu kèm cách đo lại. Toàn văn ở `task2-ai-output-verbatim.md` mục Output B.
+- **AI Output:** *(nguyên văn tại `task2-ai-output-verbatim.md`)* — 5 đề xuất: thêm index `products.name`, bật SQLite WAL, thêm connection pool, băm mật khẩu bcrypt "để cải thiện hiệu năng", xoá giỏ hàng sau checkout.
+- **Human Review Notes:** *(SV đã kiểm)* — phân loại từng đề xuất đối chiếu trực tiếp với code (bảng đầy đủ `report/main-report.md` §3.3): **WAL** và **xoá giỏ hàng** → feasible thật; **thêm index `products.name`** → feasible nhưng vô ích (xác nhận bằng cách đọc lại `server.js:144`: `LIKE '%X%'` wildcard đầu chuỗi không dùng được B-tree index dù có thêm); **connection pool** → hallucinated (xác nhận `sqlite3` của Node không có mô hình client-server); **bcrypt "để cải thiện hiệu năng"** → hallucinated về mặt hiệu năng (bcrypt cố tình chậm, sẽ làm chậm login đi chứ không nhanh hơn — AI trộn lẫn mục tiêu bảo mật với hiệu năng, đây là lỗi tinh vi vì đề xuất *đúng về bảo mật* nên dễ bị chấp nhận nhầm là đúng luôn về hiệu năng). *(SV chưa tự kiểm)* — chưa chạy A/B test thật cho đề xuất WAL (ghi vào `docs/TODO-CON-LAI.md` làm việc điểm cộng).
 
 ### [LOG-016] — Task 3: flow chart + CI pipeline + chạy thật
 - **Tool:**

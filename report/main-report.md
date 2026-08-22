@@ -186,24 +186,41 @@ Tóm tắt — chi tiết đầy đủ ở [`endurance/endurance-threshold.md`](
 
 ## 3.1 Phân tích của AI — nguyên văn
 
-*(Trỏ tới [`ai-audit/task2-ai-output-verbatim.md`](../ai-audit/task2-ai-output-verbatim.md) và tóm tắt các nhận định chính.)*
+Toàn bộ prompt và output nguyên văn (không chỉnh sửa) ở [`ai-audit/task2-ai-output-verbatim.md`](../ai-audit/task2-ai-output-verbatim.md). Prompt **chỉ** chứa dữ liệu thô (`results/summary.md` đầy đủ, 200 dòng đầu raw `.jtl` của Stress, toàn bộ `resources.csv` của Stress) — **không** kèm theo bất kỳ phát hiện nào đã làm ở §2 (bảng theo bậc, `allThreads`, CPU generator...), để phép săn lỗi ở §3.2 có ý nghĩa thật.
+
+**Tóm tắt 5 nhận định chính của AI:**
+1. Error rate "thô" 13,8–14,2% ở cả 4 lượt là "đáng lo ngại", cần điều tra nguyên nhân concurrency trên SQLite.
+2. Endpoint đắt nhất là `05 Apply coupon` (133,4ms) và `02 Search products` (94,9ms) — nghi do thiếu index.
+3. Hệ thống "ổn định xuyên suốt từ 25 VU tới 200 VU" dựa trên p95=289ms (tổng thể Stress) dưới ngưỡng 500ms "chuẩn ngành".
+4. Đề xuất SLO: p95 ≤ 300ms, error ≤ 1%, RPS tối thiểu 140 req/s.
+5. Không đủ dữ liệu Soak trong prompt để đánh giá rò rỉ bộ nhớ — AI thành thật nhận giới hạn này (điểm tốt, không phải lỗi).
 
 ## 3.2 Soát lại — chỗ AI đọc sai metric
 
 | # | AI nói gì (trích nguyên văn) | Sai ở đâu | **Giá trị đúng từ raw `.jtl`** | Vì sao AI sai |
 |---|---|---|---|---|
-| 1 | | | *(tên file + con số)* | |
-| 2 | | | | |
+| 1 | *"error rate thô 13,8–14,2%... đáng lo ngại nếu đây là hệ thống production... thường ngưỡng chấp nhận được là dưới 1%"* | Gộp thẳng error rate **thô** vào kết luận mà không kiểm nguồn gốc từng mã lỗi | `23127183_Stress_....jtl`: `awk -F, 'NR>1{n[$4"\|"$3]++}...'` cho thấy **8.430/59.628** sample "lỗi" đều mang mã `401`/`403` và **100% thuộc sampler `07 Login sai (lockout)`** — nhánh cố ý sai mật khẩu. **Error rate thật = 0,00%** ở cả 4 lượt | AI không được cho biết bước 7 là nhánh lockout cố ý (đúng như thiết kế thử nghiệm — không mớm đáp án); nó không tự đối chiếu tên `label` với mã lỗi trước khi kết luận |
+| 2 | *"avg 88,7ms... nhìn chung ở mức chấp nhận được cho một API backend"* | Dùng trung bình trên phân phối lệch phải nghiêm trọng, che mất đuôi | Cùng file: `p99=419ms`, `max=976ms` — gấp **11×** và **gần 11×** so với avg. Tỉ số `max/p50` = 976/46 ≈ **21 lần** | AI trích đúng số avg từ `summary.md` nhưng không đối chiếu với p99/max nằm ngay cột bên cạnh trong cùng bảng nó vừa đọc |
+| 3 | *"Soak xử lý được 9.176 sample trong khi Load chỉ xử lý 3.282 sample — Soak có khả năng chịu tải/thông lượng cao hơn đáng kể"* | So sánh **số sample tuyệt đối** giữa hai lượt có **thời lượng khác nhau** mà không chuẩn hóa | Load chạy 358,5s, Soak chạy 718,6s (gấp 2×). RPS thật: Load = **9,2 req/s**, Soak = **12,8 req/s** — Soak nhỉnh hơn thật (~39%), nhưng **không phải** "đáng kể" như ấn tượng "gấp gần 3 lần" mà số sample thô tạo ra | AI có đủ dữ liệu (`summary.md` in cả cột RPS lẫn "Thời lượng (s)") nhưng chọn so sánh sample count — con số bắt mắt hơn nhưng gây hiểu lầm |
+| 4 | *"hệ thống xử lý ổn định xuyên suốt từ 25 VU tới 200 VU"* dựa trên **p95=289ms tổng thể** của Stress | Kết luận "ổn định xuyên suốt" chỉ từ MỘT con số p95 gộp cả 4 bậc tải, không cắt theo từng bậc | Cắt theo cửa sổ ổn định từng bậc (`--windows "10-90,100-180,195-270,290-420"`): p95 bậc 1(25VU)=**20ms** → bậc 2(50VU)=**24ms** → bậc 3(100VU)=**60ms** → bậc 4(200VU)=**340ms**. Tăng **17 lần** từ bậc 1 đến bậc 4, và CPU `node.exe` đạt **117,1%** (bão hòa 1 lõi) ở bậc 4 — hoàn toàn không phải "ổn định xuyên suốt" | `summary.md` không tự tách theo bậc — AI phải chủ động cắt theo `allThreads`/thời gian mới thấy được, nhưng nó dừng lại ở con số tổng hợp sẵn có |
+| 5 | *"RPS tối thiểu: 140 req/s — dựa trên năng lực đã chứng minh của hệ thống"* | Đề xuất ngưỡng SLO **tối thiểu** đúng bằng mức tải mà hệ thống **đã bão hòa**, không phải mức an toàn | Ở đúng thời điểm RPS=142,1 req/s (bậc 4 Stress), `node.exe` đã đạt CPU đỉnh **117,1%** — tức đây là **gần trần**, không phải nền an toàn. Đặt SLO tối thiểu = mức bão hòa là nguy hiểm, hệ thống sẽ luôn ở ranh giới vi phạm SLO | AI không đối chiếu ngưỡng RPS đề xuất với dữ liệu CPU có sẵn ngay trong `resources.csv` mà chính nó nhận được trong prompt |
+| 6 | Toàn bộ phân tích **không hề nhắc tới CPU của `java.exe`** dù `resources.csv` đầy đủ 634 dòng đã có trong prompt | Bỏ qua hoàn toàn khả năng load generator (JMeter) ở cùng máy ảnh hưởng số đo | Từ chính file đã đưa: CPU đỉnh `java.exe` ở bậc 4 = **34,9%**, thấp hơn nhiều so với `node.exe` = **117,1%** — may mắn không đổi chiều kết luận ở Stress, nhưng **AI không hề kiểm tra khả năng này**, dù dữ liệu đã có sẵn. Ở Soak (lượt khác, không có trong prompt Task 2), tình huống đảo ngược hoàn toàn (`java`=246,3% > `node`=16,3%) — cho thấy việc bỏ qua kiểm tra này là rủi ro thật, không phải lý thuyết suông | Đây là loại lỗi **im lặng nguy hiểm nhất**: không sai ở lượt này nhưng phương pháp phân tích thiếu bước kiểm tra bắt buộc, nên có thể sai ở lượt khác |
 
-*(≥5 dòng. Mỗi dòng phải có con số trích từ raw, và ghi lại lệnh dùng để tính con số đó. Danh sách 8 lỗi hay gặp: `docs/09-TASK2-AI-ANALYSIS.md` §3.)*
+**Điều đáng ghi nhận:** AI **đúng** khi từ chối trả lời câu 5 (rò rỉ bộ nhớ) vì thiếu dữ liệu Soak trong prompt — đây là hành vi tốt (biết giới hạn của mình), không phải lỗi.
 
 ## 3.3 Đề xuất tối ưu — feasible hay hallucinated
 
 | Đề xuất của AI | Phân loại | Lý do — trích file:dòng | Cách đo lại |
 |---|---|---|---|
-| | | | |
+| 1. Thêm `CREATE INDEX` cho `products.name` | ⚠️ **Feasible nhưng vô ích ở đây** | Truy vấn là `` `SELECT * FROM products WHERE name LIKE '%${searchQuery}%'` `` (`server.js:144`) — wildcard ở **đầu chuỗi** nên B-tree index không dùng được kể cả khi thêm. Xác nhận `database.js` không có `CREATE INDEX` nào từ trước. Đây là ví dụ kinh điển: AI đề xuất "thêm index" như phản xạ mặc định cho mọi truy vấn chậm, mà không đọc kỹ dạng truy vấn |
+| 2. Bật SQLite WAL (`PRAGMA journal_mode=WAL`) | ✅ **Feasible** | `POST /api/checkout` có `INSERT` thật (`server.js:302`); SQLite mặc định (rollback journal) khoá cả file khi ghi. WAL cho phép đọc đồng thời với ghi — cải thiện thật khi có nhiều request đọc (bước 2,3) chạy song song với ghi (bước 6) |
+| 3. Thêm connection pool cho SQLite | ❌ **Hallucinated** | `sqlite3` của Node mở **một handle trên file cục bộ**, không có mô hình client–server → không tồn tại khái niệm "pool" theo nghĩa PostgreSQL/MySQL. Đây là đề xuất chép từ ngữ cảnh khác, không áp dụng được cho SQLite nhúng |
+| 4. Băm mật khẩu bằng bcrypt "để cải thiện hiệu năng" | ❌ **Hallucinated (về hiệu năng)** | `server.js:46` so sánh `user.password === password` (plaintext, tốn ~0ms). Thêm `bcrypt.compare()` **LÀM CHẬM ĐI** hàng chục lần (bcrypt cố tình chậm để chống brute-force) — AI trộn lẫn mục tiêu bảo mật với mục tiêu hiệu năng, đúng về bảo mật nhưng **sai hoàn toàn** về hiệu năng |
+| 5. Xoá giỏ hàng (`userCarts`) sau checkout | ✅ **Feasible** | `server.js:290-293` — `userCarts[userId].push(...)`, không có `clearCart` sau `POST /api/checkout`. Liên quan trực tiếp tới quan sát RSS ở Soak (`endurance/endurance-threshold.md` §5): dù chưa thấy rò rỉ rõ ở 12 phút, đây vẫn là sửa chữa đúng hướng phòng ngừa |
 
-*(Nếu có A/B test thật — vd bật SQLite WAL — ghi kết quả trước/sau kể cả khi không cải thiện, và ghi rõ đã hoàn nguyên thay đổi trên SUT.)*
+**Tổng kết phân loại:** 2 feasible thật sự có ích (WAL, xoá giỏ hàng) · 1 feasible nhưng vô ích do đặc điểm truy vấn (index) · 2 hallucinated (connection pool, bcrypt-vì-hiệu-năng).
+
+*(A/B test thật cho đề xuất WAL: chưa thực hiện — ghi vào `docs/TODO-CON-LAI.md` làm việc điểm cộng nếu còn thời gian, cần sửa `database.js`, restart backend, re-seed dữ liệu, chạy lại Load để so sánh, rồi hoàn nguyên.)*
 
 ## 3.4 Đo hồi phục sau cú sốc (Spike)
 
