@@ -96,3 +96,22 @@
 | Reset lockout truoc luot | co, chay toi khi 0 tai khoan bi khoa |
 | Cooldown truoc luot | ~33 phut (tu 18:37 Load ket thuc den 19:10 Stress bat dau) — du xa |
 | Ghi chu | 59.628 sample, 0% loi, peak allThreads=200 xac nhan dung 4 bac cong don. Sinh vien tu chay trong PowerShell rieng. |
+
+## Luot Spike — 20260822-192951
+
+| | |
+|---|---|
+| Test plan | `test-plans/23127183_Spike_20260821.jmx` |
+| Bat dau | 19:29:53 22/8/2026 (epoch 1787401793541) |
+| Ket thuc | 19:33:58 22/8/2026 (epoch 1787402038910) |
+| Thoi luong | 245s |
+| Raw `.jtl` | `results/jtl/23127183_Spike_20260822-192951.jtl` |
+| `jmeter.log` | `results/jtl/23127183_Spike_20260822-192951.jmeter.log` |
+| Dashboard | `results/html/spike` |
+| Resource CSV | `results/resources/23127183_Spike_20260822-192951.resources.csv` |
+| `products` khi do | 20005 dong |
+| JMeter exit code | 0 |
+| **Anh Task Manager** | `resource-monitor/screenshots/taskmgr-spike.png` — chup luc 7:31 PM, dung trong cua so soc (Active:190 Started:190 ngay truoc dong CHUP), thay ca PowerShell va Task Manager (node.exe PID 3728 CPU 12%, java.exe PID 23360 CPU 2%) trong CUNG mot anh |
+| Reset lockout truoc luot | co, chay toi khi 0 tai khoan bi khoa |
+| Cooldown truoc luot | ~12 phut (tu 19:17 Stress ket thuc den 19:29 Spike bat dau) — du xa |
+| Ghi chu | 18.102 sample, 0% loi, peak allThreads=210 (10 nen + 200 xung) xac nhan cu soc that su xay ra. Sinh vien tu chay trong PowerShell rieng. |
