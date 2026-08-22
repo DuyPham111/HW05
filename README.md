@@ -51,24 +51,24 @@ Cả 4 test plan (Load / Stress / Spike / Soak) chạy **cùng** workflow này, 
 |---|---|
 | Scenario đã chạy | **4** — Load · Stress · Spike · Soak (endurance) |
 | Endpoint group được phủ | **3** — auth-heavy · read-heavy · transactional |
-| Tổng sample | *(điền)* |
-| Error rate (**ngoài thiết kế**) | *(điền — 401/403 của bước 7 là hành vi cố ý, không tính là lỗi)* |
-| Điều kiện khi đo | `products` = *(N)* dòng · `users` = 402 · JMeter và SUT **cùng máy** |
-| **Endurance threshold** | *(điền: RPS ổn định · p95 · trôi p95 · trôi RSS · trần RSS)* |
-| Tải cao nhất quan sát được | *(điền: RPS ở 200 VU, p95, error%, CPU node đỉnh)* |
-| Hồi phục sau spike | *(điền: p95 của 4 cửa sổ W1–W4)* |
-| Bug / performance issue | *(điền số)* |
-| Lỗi của AI đã bắt và sửa | *(điền: n lỗi ở test plan + m nhận định đọc sai metric)* |
-| Ảnh bằng chứng | *(điền số)* ảnh khớp mốc thời gian |
+| Tổng sample | **90.188** (3.282 + 59.628 + 18.102 + 9.176) |
+| Error rate (**ngoài thiết kế**) | **0,00%** ở cả 4 lượt — mọi 401/403 đều thuộc bước 7 (nhánh lockout cố ý) |
+| Điều kiện khi đo | `products` = **20.005** dòng · `users` = 402 · JMeter và SUT **cùng máy** |
+| **Endurance threshold** | **12,8 req/s** ổn định 12 phút · p95 **15 ms** · trôi p95 **−6,3%** · trôi RSS **−15,0%** (không tăng) · trần RSS **113,7 MB** — nhưng 1/4 tiêu chí FAIL (CPU `java` 246,3% > `node` 16,3%), xem `endurance/endurance-threshold.md` §4 |
+| Tải cao nhất quan sát được | Stress 200 VU: **142,1 req/s**, p95 **289 ms**, error **0%**, `node.exe` CPU đỉnh **13%** |
+| Hồi phục sau spike | W1 (nền) p95 **15ms** → W2 (sốc, 210 VU) p95 **479ms** → W3 (ngay sau) p95 **12ms** → W4 (nền sau) p95 **18ms** — hồi phục tức thì, không tồn đọng |
+| Bug / performance issue | **4** ứng viên (P1 register trùng email, P2 200+`{}`, P5 payload 3,6MB không phân trang, P6 restart xoá DB) — ảnh + Issue đang hoàn thiện |
+| Lỗi của AI đã bắt và sửa | **9 lỗi** thiết kế test plan (bảng human review) + phát hiện 3 bug vận hành thật (fetch treo 6h, encoding path tiếng Việt, PowerShell `-eq`) |
+| Ảnh bằng chứng | **6 ảnh**: 4 Task Manager (mỗi lượt) + dxdiag + hardware, tất cả khớp mốc thời gian |
 
 ### Bốn lượt chạy
 
-| Scenario | Sample | Peak VU | Thời lượng | RPS | Error % | avg | p50 | p90 | **p95** | p99 | max |
+| Scenario | Sample | Peak VU | Thời lượng | RPS | Error % (thật) | avg | p50 | p90 | **p95** | p99 | max |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| **Load** | | | | | | | | | | | |
-| **Stress** | | | | | | | | | | | |
-| **Spike** | | | | | | | | | | | |
-| **Soak** | | | | | | | | | | | |
+| **Load** | 3.282 | 20 | 358,5s | 9,2 | 0,0% | 6,7 | 4 | 15 | **16** | 20 | 199 |
+| **Stress** | 59.628 | 200 | 419,5s | 142,1 | 0,0% | 88,7 | 46 | 232 | **289** | 419 | 976 |
+| **Spike** | 18.102 | 210 | 239,5s | 75,6 | 0,0% | 184,0 | 117 | 455 | **530** | 682 | 893 |
+| **Soak** | 9.176 | 20 | 718,6s | 12,8 | 0,0% | 6,4 | 4 | 14 | **15** | 18 | 121 |
 
 Đơn vị: **ms**. Mốc thời gian từng lượt: [results/run-log.md](results/run-log.md) · [endurance/run-log.md](endurance/run-log.md).
 

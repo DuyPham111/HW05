@@ -71,32 +71,46 @@ Chi tiết đầy đủ (số dòng code, lý do từng bước, lựa chọn b�
 
 ## 2.2 Kết quả — tổng quan
 
-*(Bảng 4 lượt, copy từ `results/summary.md`.)*
-
-### Stress — theo từng bậc VU
-
-| Bậc | VU | Sample | RPS | Error% | p50 | p90 | p95 | p99 | max | CPU node đỉnh |
+| Scenario | Sample | Peak VU | Thời lượng | RPS | Error% (thật) | p50 | p90 | **p95** | p99 | max |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 1 | 25 | | | | | | | | | |
-| 2 | 50 | | | | | | | | | |
-| 3 | 100 | | | | | | | | | |
-| 4 | 200 | | | | | | | | | |
+| Load | 3.282 | 20 | 358,5s | 9,2 | 0,0% | 4 | 15 | **16** | 20 | 199 |
+| Stress | 59.628 | 200 | 419,5s | 142,1 | 0,0% | 46 | 232 | **289** | 419 | 976 |
+| Spike | 18.102 | 210 | 239,5s | 75,6 | 0,0% | 117 | 455 | **530** | 682 | 893 |
+| Soak | 9.176 | 20 | 718,6s | 12,8 | 0,0% | 4 | 14 | **15** | 18 | 121 |
 
-*(Kết luận về điểm gãy — kiểm đủ 4 dấu hiệu ở `docs/05` §4, không kết luận "chịu tải tốt" chỉ từ p95.)*
+*(Nguồn: `results/summary.md`, sinh tự động từ raw `.jtl`. Error% Spike/Stress cao "thô" chỉ vì gồm nhiều sample bước 7 theo thiết kế — xem cột "thật" ở trên, luôn 0%.)*
 
-## 2.3 Kết quả theo từng endpoint
+### Stress — theo từng bậc VU (cắt cửa sổ ổn định bằng `--windows`)
 
-| Sampler | Nhóm | Sample | avg elapsed | avg Latency | p95 | max | Error% |
-|---|---|---|---|---|---|---|---|
-| 01 Login | auth | | | | | | |
-| 02 Search | read | | | | | | |
-| 03 Product detail | read | | | | | | |
-| 04 Add to cart | trans | | | | | | |
-| 05 Apply coupon | trans | | | | | | |
-| 06 Checkout | trans | | | | | | |
-| 07 Login sai | auth | | | | | | |
+| Bậc | VU đỉnh cửa sổ | Sample | RPS | p50 | p90 | **p95** | p99 | max | CPU `node` đỉnh | CPU `java` đỉnh |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 (10–90s) | 27 | 3.027 | 37,9 | 5 | 17 | **20** | 35 | 111 | 19,1% (avg) | — |
+| 2 (100–180s) | 53 | 6.055 | 75,7 | 6 | 19 | **24** | 36 | 66 | 40,6% (avg) | — |
+| 3 (195–270s) | 104 | 11.148 | 148,6 | 14 | 44 | **60** | 159 | 432 | 77,0% (avg) | — |
+| 4 (290–420s) | 200 | 32.582 | 251,6 | 125 | 280 | **340** | 461 | 976 | **102,7% (avg) / 117,1% (đỉnh)** | 34,9% (đỉnh) |
 
-*(So sánh bước 2 với bước 3 để tách chi phí quét bảng khỏi chi phí đọc PK — đây là kết quả có nội dung, không chỉ liệt kê.)*
+**Kết luận — điểm gãy rõ ràng, không phải "chịu tải tốt":**
+
+1. **p95 tăng phi tuyến, không tuyến tính theo VU.** Từ bậc 1→2 (25→50 VU), p95 gần như không đổi (20→24ms, +20%). Nhưng từ bậc 2→3 (50→100 VU) và 3→4 (100→200 VU), p95 nhảy vọt: 24→60ms (+150%) rồi 60→340ms (+467%). Đây chính là dấu hiệu "đuôi phân phối dãn" mà §6 muốn tìm — hệ thống bắt đầu gãy đâu đó giữa 50 và 200 VU.
+2. **CPU `node.exe` tăng gần tuyến tính và CHẠM TRẦN một lõi ở bậc 4**: 19,1% → 40,6% → 77,0% → **117,1%** (vượt 100% của một lõi — Node đơn luồng cho JS nên đây là bão hòa thật, dù máy còn 7 lõi rảnh).
+3. **`java.exe` (JMeter) KHÔNG phải điểm nghẽn**: CPU đỉnh chỉ 34,9% ở bậc 4, thấp hơn nhiều so với `node.exe` (117,1%) — khác hẳn tình huống ở lượt Soak (`endurance/endurance-threshold.md` §4), nơi JMeter mới là điểm nghẽn ở tải nhẹ. Kết luận: **ở Stress, chính SUT là nút cổ chai**, số đo đáng tin cậy.
+4. **Chưa tìm được điểm gãy tuyệt đối** — 200 VU là trần vì CSV chỉ có 200 tài khoản, chưa tăng tiếp tới khi error rate thật sự bật lên. Ngưỡng gãy nằm đâu đó **trên** 200 VU.
+
+## 2.3 Kết quả theo từng endpoint (lượt Load — tải nhẹ, phản ánh đúng chi phí xử lý, chưa bị hàng đợi làm nhiễu)
+
+| Sampler | Nhóm | Sample | avg elapsed | p95 | max | Error% (thật) |
+|---|---|---|---|---|---|---|
+| 01 Login | auth | 477 | 6,3ms | 10ms | 53ms | 0% |
+| 02 Search (quét bảng) | read | 476 | **12,5ms** | 18ms | 28ms | 0% |
+| 03 Product detail (đọc PK) | read | 472 | **2,8ms** | 4ms | 89ms | 0% |
+| 04 Add to cart | trans | 468 | 3,6ms | 5ms | 7ms | 0% |
+| 05 Apply coupon | trans | 465 | 3,6ms | 6ms | 16ms | 0% |
+| 06 Checkout (INSERT) | trans | 464 | 14,9ms | 18ms | 199ms | 0% |
+| 07 Login sai | auth | 460 | 3,2ms | 4ms | 17ms | 0% |
+
+**So sánh bước 2 với bước 3 — kết quả có nội dung, không chỉ liệt kê:** `GET /api/products?search=` (quét bảng `LIKE '%X%'`, không dùng được index) mất **12,5ms** trung bình, trong khi `GET /api/products/{id}` (đọc theo PRIMARY KEY) chỉ mất **2,8ms** — **chậm hơn 4,5 lần**. Đây là bằng chứng thực nghiệm trực tiếp cho lý do chọn workflow ở `docs/endpoint-selection.md`: chi phí *full table scan* tách bạch rõ ràng khỏi chi phí *đọc PK thuần*, và là căn cứ để Task 2 phân loại đề xuất "thêm index" là **feasible-nhưng-vô-ích** (wildcard đầu chuỗi không dùng được B-tree index).
+
+**Quan sát phụ:** `06 Checkout` (ghi `INSERT` thật) đứng thứ 2 về chi phí (14,9ms) sau Search — hợp lý vì SQLite ghi tuần tự tốn hơn đọc. `01 Login` khá nhanh (6,3ms) vì so sánh mật khẩu **plaintext**, không băm — đúng như lưu ý ở §1.2, p95 của endpoint này không đại diện cho hệ thống có bcrypt.
 
 ## 2.4 Human review — AI sai gì, vì sao (§6 chấm mục này)
 
@@ -125,28 +139,46 @@ Chi tiết đầy đủ (số dòng code, lý do từng bước, lựa chọn b�
 
 ## 2.5 Bằng chứng chạy
 
-| Lượt | Raw `.jtl` | Dashboard | Ảnh Task Manager | Mốc giờ |
+| Lượt | Raw `.jtl` | Dashboard | Ảnh Task Manager | Mốc giờ (local) |
 |---|---|---|---|---|
-| Load | | | | |
-| Stress | | | | |
-| Spike | | | | |
-| Soak | | | | |
+| Load | `results/jtl/23127183_Load_20260822-183102.jtl` (3.282 sample) | `results/html/load/` | `taskmgr-load.png` — giây 180 | 18:31:04 → 18:37:09 |
+| Stress | `results/jtl/23127183_Stress_20260822-191048.jtl` (59.628 sample) | `results/html/stress/` | `taskmgr-stress.png` — giây 350, bậc 200 VU | 19:10:50 → 19:17:59 |
+| Spike | `results/jtl/23127183_Spike_20260822-192951.jtl` (18.102 sample) | `results/html/spike/` | `taskmgr-spike.png` — giây 75, giữa cú sốc (Active:190) | 19:29:53 → 19:33:58 |
+| Soak | `endurance/jtl/23127183_Soak_20260822-193744.jtl` (9.176 sample) | `endurance/html/soak/` | `taskmgr-soak.png` — giây 400 | 19:37:46 → 19:49:52 |
 
-*(Nhúng ảnh. Kèm ảnh 3 listener khác loại và ảnh View Results Tree cho thấy response 401 của bước 7.)*
+Ba listener khác loại (§6): **Summary Report** (Load, Soak) · **Aggregate Report** (Stress) · **View Results Tree** (Spike). Ảnh bằng chứng nằm ở `resource-monitor/screenshots/`; mỗi ảnh chụp trong lúc lượt đang chạy (mtime nằm trong khoảng "Mốc giờ" ở trên), thấy cả cửa sổ PowerShell đang chạy JMeter và Task Manager trong cùng một khung.
 
-**Video demo:** *(link + thời lượng)*
+**Video demo:** *(chưa quay — xem `docs/HUONG-DAN-VIEC-TU-LAM.md` mục E)*
 
 ## 2.6 Xử lý account-lockout và state giữa các lượt (§6 đòi ghi lại)
 
-*(Chép mẫu ở `docs/07-CHAY-VA-THU-BANG-CHUNG.md` §3, sửa theo thực tế.)*
+Thủ tục thực tế đã áp dụng giữa cả 4 lượt: `tools/run-scenario.mjs` tự động gọi `reset-lockout.mjs --wait` ở bước [1/4] trước khi khởi động JMeter, đợi tới khi 0/400 tài khoản còn bị khóa (dùng `GET /api/admin/users` để đọc `login_attempts`/`locked_until` — chỉ đọc, không đăng nhập nên không tự làm thay đổi thứ đang kiểm, xem `docs/07` §3). Ngoài ra, cooldown thực tế giữa các lượt đều vượt xa mức 90 giây tối thiểu:
+
+| Giữa lượt | Cooldown thực tế |
+|---|---|
+| Load → Stress | ~33 phút |
+| Stress → Spike | ~12 phút |
+| Spike → Soak | ~4 phút (đủ, do bận cập nhật báo cáo giữa các lượt) |
+
+Không lượt nào bị lockout tồn dư từ lượt trước — xác nhận bằng dòng "[OK] Không còn tài khoản nào bị khóa" trong log mỗi lượt (`results/run-log.md`).
 
 ## 2.7 Endurance threshold (§6)
 
-*(Tóm tắt từ `endurance/endurance-threshold.md` — bảng kết luận bằng số + phần diễn giải RSS/`userCarts`.)*
+Tóm tắt — chi tiết đầy đủ ở [`endurance/endurance-threshold.md`](../endurance/endurance-threshold.md):
 
-## 2.8 *(Tuỳ chọn)* Một phát hiện hoặc một kết luận đã tự bác bỏ
+| Chỉ số | Giá trị |
+|---|---|
+| Max stable RPS | **12,8 req/s**, duy trì đều 12 phút, error 0% |
+| p95 | 15 ms · độ trôi **−6,3%** (5' đầu → 5' cuối) |
+| RSS `node.exe` | trần **113,7 MB** (đỉnh phút 1, warm-up) → ổn định **~76 MB** từ phút 3, độ trôi **−15,0%** (giảm, không tăng) |
+| Rò rỉ bộ nhớ? | **Không** phát hiện ở quy mô 12 phút — `userCarts` (`server.js:290-293`) không có cơ chế xoá, nhưng RSS không tăng đơn điệu; xem giới hạn ở §6 của file |
+| **3/4 tiêu chí ổn định đạt** | Tiêu chí 4 (CPU `java` < CPU `node`) **FAIL**: java đỉnh 246,3% vs node 16,3% → **12,8 req/s là trần của JMeter trên máy này**, không phải trần thật của SUT |
 
-*(Nếu trong quá trình đo bạn rút ra một kết luận rồi dữ liệu sau bác bỏ nó — giữ lại cả hai và giải thích. Đây là loại nội dung ăn điểm cao nhất vì nó chứng minh bạn đọc số liệu thật.)*
+## 2.8 Một phát hiện tự bác bỏ
+
+**Kết luận ban đầu (sai) khi mới nhìn số Soak:** "RSS giảm từ lúc bắt đầu (61,5 MB đọc tay trước khi chạy) xuống mức ổn định trong lượt (~76 MB)?" — thoạt nhìn có vẻ vô lý (RSS đang chạy lại thấp hơn lúc đứng yên?). Nhìn kỹ chuỗi số theo phút mới thấy: RSS thực ra **tăng vọt lên đỉnh 113,7 MB ở phút 1** rồi mới giảm và ổn định quanh 76 MB — nên con số 61,5 MB đọc tay trước khi chạy không phải là "RSS bình thường của backend" mà là RSS ở trạng thái nghỉ dài, còn 113,7 MB mới là đỉnh thật ngay khi bắt đầu nhận tải (JIT warm-up + ramp 60s). Nếu chỉ so sánh "đầu" và "cuối" bằng hai điểm đơn lẻ (61,5 MB vs con số cuối) mà không nhìn cả chuỗi theo phút, sẽ bỏ lỡ đỉnh này và có thể rút ra kết luận ngược — đây chính là lý do `docs/08-ENDURANCE-THRESHOLD.md` §5 yêu cầu bảng theo từng phút, không chỉ hai điểm đầu/cuối.
+
+**Một phát hiện tương phản khác đáng ghi:** ở Stress (200 VU), `java.exe` **không** phải điểm nghẽn (CPU đỉnh 34,9% so với `node.exe` 117,1%) — nhưng ở Soak (20 VU, tải nhẹ hơn), `java.exe` lại **là** điểm nghẽn (CPU đỉnh 246,3% so với `node.exe` 16,3%). Cùng một load generator, cùng một máy, nhưng vai trò "ai là nút cổ chai" đảo ngược hoàn toàn tùy theo mức tải — không thể khái quát một kết luận chung như "JMeter luôn/không bao giờ là điểm nghẽn trên máy này". Đây là dữ kiện quan trọng cho Task 2 (đọc số liệu phải theo từng điều kiện cụ thể, không suy rộng).
 
 ---
 
@@ -175,25 +207,25 @@ Chi tiết đầy đủ (số dòng code, lý do từng bước, lựa chọn b�
 
 ## 3.4 Đo hồi phục sau cú sốc (Spike)
 
-> **Nguồn số dưới đây:** lượt **kiểm chứng** `results/jtl/validate-spike.jtl` (19.454 sample, 0% error, đúng 4:00).
-> Đây **chưa phải lượt chính thức** — lượt chính thức cần ảnh Task Manager cùng khung và mẫu tài nguyên (doc 7). Bảng này chứng minh **phương pháp phân tích đã chạy được**; số cuối cùng sẽ thay bằng lượt chính thức.
+> **Nguồn:** lượt **chính thức** `results/jtl/23127183_Spike_20260822-192951.jtl` (18.102 sample, 0% lỗi thật, 22/8/2026 19:29:53–19:33:58), ảnh `taskmgr-spike.png` chụp trong cửa sổ sốc.
 
 | Cửa sổ | Khoảng | Peak VU | Sample | RPS | Error% | p50 | **p95** | p99 | max |
 |---|---|---|---|---|---|---|---|---|---|
-| W1 nền trước | 10–55s | 10 | 1.769 | 39,3 | 0% | 4 | **15** | 26 | 59 |
-| W2 trong sốc | 65–90s | **210** | 9.695 | **388,0** | 0% | 278 | **479** | 554 | 727 |
-| W3 ngay sau | 96–125s | 10 | 1.161 | 40,0 | 0% | 3 | **12** | 20 | 95 |
-| W4 nền sau | 130–238s | 10 | 4.157 | 38,5 | 0% | 3 | **18** | 68 | 171 |
+| W1 nền trước | 10–55s | 10 | 1.767 | 39,3 | 0% | 5 | **18** | 27 | 94 |
+| W2 trong sốc | 65–90s | **210** | 8.742 | **349,1** | 0% | 333 | **597** | 745 | 893 |
+| W3 ngay sau | 96–125s | 10 | 1.120 | 38,7 | 0% | 4 | **15** | 19 | 25 |
+| W4 nền sau | 130–238s | 10 | 4.116 | 38,1 | 0% | 4 | **16** | 23 | 298 |
 
 **Đọc kết quả:**
 
-1. **Hồi phục tức thì, không tồn đọng hàng đợi.** p95 ở W3 = **12 ms**, thậm chí *thấp hơn* baseline W1 = 15 ms, và W4 = 18 ms. Nếu có hàng đợi tích lũy thì W3 phải còn cao rồi mới giảm dần — ở đây không có dấu hiệu đó.
-2. **Hệ thống hấp thụ cú sốc bằng ĐỘ TRỄ chứ không bằng cách từ chối request:** VU tăng **21×** (10 → 210), p95 tăng **32×** (15 → 479 ms), nhưng **error rate = 0%** ở cả 4 cửa sổ và `max` chỉ 727 ms — không có timeout, không có 5xx.
+1. **Hồi phục tức thì, không tồn đọng hàng đợi.** p95 ở W3 = **15 ms**, thậm chí *thấp hơn* baseline W1 = 18 ms, và W4 = 16 ms cũng ở mức nền. Nếu có hàng đợi tích lũy thì W3 phải còn cao rồi mới giảm dần — ở đây không có dấu hiệu đó.
+2. **Hệ thống hấp thụ cú sốc bằng ĐỘ TRỄ chứ không bằng cách từ chối request:** VU tăng **21×** (10 → 210), p95 tăng **33×** (18 → 597 ms), nhưng **error rate = 0%** ở cả 4 cửa sổ và `max` chỉ 893 ms — không có timeout, không có 5xx.
 3. **Load generator KHÔNG phải điểm nghẽn** — phép kiểm chéo mà §3 của `docs/06` đòi:
-   - RPS lý thuyết tối đa = VU / (think trung bình + latency) = 210 / (0,250 + 0,279) = **397,2 req/s**
-   - RPS đo được ở W2 = **388,0 req/s** → đạt **97,7%** mức lý thuyết
-   - ⇒ VU được dùng gần hết công suất; giới hạn nằm ở **độ trễ của server**, không phải ở khả năng sinh tải của JMeter. Nếu JMeter là nút cổ chai thì RPS đã thấp hơn nhiều so với mức lý thuyết.
-4. **RPS tăng dưới tuyến tính** (9,9× so với VU 21×) — đúng như kỳ vọng khi hệ thống bị giới hạn bởi độ trễ: mỗi VU phải chờ lâu hơn nên số vòng lặp/giây không tăng theo kịp số VU.
+   - RPS lý thuyết tối đa = VU / (think trung bình + latency) = 210 / (0,250 + 0,343) = **354,0 req/s**
+   - RPS đo được ở W2 = **349,1 req/s** → đạt **98,6%** mức lý thuyết
+   - ⇒ VU được dùng gần hết công suất; giới hạn nằm ở **độ trễ của server**, không phải ở khả năng sinh tải của JMeter. Nếu JMeter là nút cổ chai thì RPS đã thấp hơn nhiều so với mức lý thuyết. Nhất quán với phát hiện ở Stress (§2.2): SUT, không phải generator, là nút cổ chai khi tải đủ cao.
+4. **RPS tăng dưới tuyến tính** (8,9× so với VU 21×) — đúng như kỳ vọng khi hệ thống bị giới hạn bởi độ trễ: mỗi VU phải chờ lâu hơn nên số vòng lặp/giây không tăng theo kịp số VU.
+5. **Điểm khác biệt với Stress ở cùng 200 VU:** Stress bậc 4 (200 VU ổn định, ramp từ từ) cho p95=340ms; Spike (200 VU dội trong 5 giây) cho p95=597ms — cao hơn dù cùng số VU. Sốc đột ngột gây áp lực tức thời lớn hơn tăng tải từ từ, dù hệ thống vẫn hồi phục ngay khi tải giảm.
 
 ---
 
