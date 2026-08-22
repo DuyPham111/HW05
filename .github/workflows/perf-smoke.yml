@@ -74,7 +74,11 @@ jobs:
       - name: Tai JMeter 5.6.3
         if: steps.cache-jmeter.outputs.cache-hit != 'true'
         run: |
-          curl -sL https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.zip -o jmeter.zip
+          # dlcdn.apache.org (mirror hien hanh) thay vi archive.apache.org — archive.apache.org
+          # co luc khong phan hoi/treo vo han (xac nhan bang tay: curl --max-time 30 tra ve
+          # http=000, 0 byte). --max-time + --retry la luoi an toan neu mirror cung cham/loi.
+          curl -sL --max-time 120 --retry 2 --retry-delay 5 \
+            https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.3.zip -o jmeter.zip
           unzip -q jmeter.zip
           mv apache-jmeter-5.6.3 jmeter-bin
 
