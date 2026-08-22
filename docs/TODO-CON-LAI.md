@@ -80,7 +80,7 @@ Doc 7 chứa các script mà doc 5/6 **cần để chạy lượt chính thức*
 | 1 | ~~Đăng ký workflow trong nhóm chat + chụp màn hình~~ | §5 | — | ✅ **XONG** — ảnh `docs/nhom-dang-ky-workflow.png`, nhúng ở `endpoint-selection.md` §5 |
 | 2 | **Chụp `dxdiag`** + xuất `dxdiag.txt` | §6, §11 | 5 phút | ❌ chưa — [mục A](HUONG-DAN-VIEC-TU-LAM.md#a-chụp-dxdiag--hardware-report-6-11--5-phút) · **làm được ngay, không phụ thuộc gì** |
 | 3 | **4 ảnh Task Manager cùng khung với JMeter** | §6, §11 | trong lúc chạy | ❌ chưa — [mục B](HUONG-DAN-VIEC-TU-LAM.md#b-chụp-ảnh-task-manager-cùng-khung-với-jmeter-6-11--4-ảnh) · cần doc 7 xong trước |
-| 4 | **4 ảnh bằng chứng bug** (P1, P2, P3, P5) | §6 | 15 phút | ❌ chưa — [mục C](HUONG-DAN-VIEC-TU-LAM.md#c-chụp-ảnh-bằng-chứng-cho-4-bug-6--15-phút) · **làm được ngay** (backend đang chạy) |
+| 4 | **5 ảnh bằng chứng bug** (P1, P2, P3, P5, P6) | §6 | 15–20 phút | ❌ chưa — [mục C](HUONG-DAN-VIEC-TU-LAM.md#c-chụp-ảnh-bằng-chứng-cho-4-bug-6--15-phút) · **làm được ngay** (backend đang chạy, lệnh `curl` thật đã có sẵn trong `bug-report.md` §2 — chỉ cần chạy lại và chụp) |
 | 5 | **Tạo GitHub Issues** + dán link thật vào `bug-report.md` | §6 | 20 phút | ❌ chưa — [mục D](HUONG-DAN-VIEC-TU-LAM.md#d-tạo-github-issues-6--20-phút) · cần mục 4 xong trước |
 | 6 | **Quay video ≥6 phút**, unlisted, giọng tiếng Việt | §6, §11 | ~1 giờ | ❌ chưa — [mục E](HUONG-DAN-VIEC-TU-LAM.md#e-quay-video-demo--6-phút-6-11--1-giờ) · **làm cuối cùng** |
 
@@ -93,12 +93,18 @@ Mục 2 và 4 làm được **ngay bây giờ** mà không cần chờ doc 7.
 
 | ID | Bug | Phát hiện khi | Cần gì thêm |
 |---|---|---|---|
-| **P1** | `POST /api/register` không có UNIQUE trên `email` → tạo tài khoản trùng, trả 200 | doc 3, lúc kiểm idempotency của `seed-perf-data.mjs` | ảnh chụp 2 lần gọi cùng email ra 2 `id` khác nhau + Issue |
-| P2 *(ứng viên)* | `GET /api/products/:id` trả **200 + `{}`** cho id không tồn tại | doc 4, lúc thiết kế assertion bước 3 | đã có bằng chứng `success=false` từ phép kiểm phá assertion; cần ảnh + Issue |
-| P3 *(ứng viên)* | `GET /api/products?search=` nối chuỗi SQL → SQL injection | đọc code `server.js:144` | **chưa kiểm chứng bằng request thật** — phải chạy `curl` trước khi báo |
-| **P5** | `/api/products` không phân trang → 3,6 MB/request, làm chết backend ở 200 VU | doc 6, lượt validate Spike đầu tiên | ✅ **đã có bằng chứng số đo đầy đủ**; cần ảnh + Issue |
-| **P6** | Restart backend xoá sạch DB (`database.js:13-21`) | doc 6, khi khôi phục sau sự cố | ✅ **đã xác minh bằng code + thực tế**; cần ảnh + Issue |
-| P4 *(ứng viên)* | Rò rỉ bộ nhớ `userCarts` | đọc code `server.js:290-293` | cần lượt Soak (doc 8) + phép kiểm dừng-tải-60s |
+| **P1** | `POST /api/register` không có UNIQUE trên `email` → tạo tài khoản trùng, trả 200 | doc 3, lúc kiểm idempotency của `seed-perf-data.mjs` | ✅ đã kiểm chứng thật (`verify-bugs.mjs`), đã viết §2 đầy đủ trong `bug-report.md` — chỉ còn thiếu ảnh + Issue |
+| **P2** | `GET /api/products/:id` trả **200 + `{}`** cho id không tồn tại | doc 4, lúc thiết kế assertion bước 3 | ✅ đã kiểm chứng thật (`verify-bugs.mjs`), đã viết §2 đầy đủ — chỉ còn thiếu ảnh + Issue |
+| **P3** | `GET /api/products?search=` nối chuỗi SQL → SQL injection | doc 4 (đọc code), doc 11 (kiểm chứng) | ✅ **đã kiểm chứng bằng request thật** (doc 11) — không chỉ lỗi 500, còn rút được toàn bộ bảng `users` (kể cả admin, mật khẩu plaintext) qua UNION injection. **Critical.** Chỉ còn thiếu ảnh + Issue |
+| **P5** | `/api/products` không phân trang → 3,6 MB/request, làm chết backend ở 200 VU | doc 6, lượt validate Spike đầu tiên | ✅ đã có bằng chứng số đo đầy đủ, đã viết §2 đầy đủ — chỉ còn thiếu ảnh + Issue |
+| **P6** | Restart backend xoá sạch DB (`database.js:13-21`) | doc 6, khi khôi phục sau sự cố | ✅ đã xác minh bằng code (tải trực tiếp từ GitHub, không phụ thuộc máy) + thực tế — chỉ còn thiếu ảnh + Issue |
+| P4 | Rò rỉ bộ nhớ `userCarts` | đọc code `server.js:290-293`, đo thật ở doc 8 (Soak) | ❌ **KHÔNG phải bug** — đã đo bằng lượt Soak thật + phép kiểm độc lập dừng-tải, RSS về **thấp hơn cả lúc bắt đầu**. Xếp vào bảng "ứng viên đã kiểm và loại" trong `bug-report.md`, không mở Issue |
+
+**Tiến độ doc 11 (AI thực hiện được):** cả 5 bug (P1/P2/P3/P5/P6) đã kiểm chứng bằng request/code
+thật, viết đầy đủ §2 chi tiết trong [`bug-report/bug-report.md`](../bug-report/bug-report.md), và
+có script chạy lại được [`bug-report/verify-bugs.mjs`](../bug-report/verify-bugs.mjs) (`6/6
+CONFIRMED`). Phần còn lại (chụp ảnh, tạo Issue thật, dán link) là việc **chỉ sinh viên làm được**
+— xem mục 3 bảng trên (mục C, D).
 
 ---
 

