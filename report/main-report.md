@@ -310,7 +310,37 @@ Bản triển khai thật (thu nhỏ, chỉ nhánh "PR thường" → smoke E) n
 
 ## 4.4 Đã chạy thật trong CI
 
-*(Bảng `ci/ci-runs.md` + đoạn nói kết quả thật đã sửa lại đề xuất §4.3 như thế nào.)*
+Pipeline [`.github/workflows/perf-smoke.yml`](../.github/workflows/perf-smoke.yml) đã chạy **4 lượt
+thật** trên GitHub Actions (bảng đầy đủ + link từng run: [`ci/ci-runs.md`](../ci/ci-runs.md)).
+Một lượt khởi động đầu tiên (Run #1) bị loại khỏi bảng vì treo ở lỗi hạ tầng (`archive.apache.org`
+không phản hồi) chứ không phải lỗi đo hiệu năng — đã sửa nguồn tải sang `dlcdn.apache.org`.
+
+| Run | p95 | So baseline | Verdict |
+|---|---|---|---|
+| #2 | 3ms | khởi tạo | PASS |
+| #3 | ~300ms+ | rất lớn | **FAIL** (cố ý — tiêm độ trễ 300ms thật vào `POST /api/login`) |
+| #4 | ~4ms | +33% | **FAIL** (❗ không cố ý) |
+| #5 | 4ms | +33% | PASS (sau khi vá ngưỡng) |
+
+**Kết quả thật đã buộc phải sửa lại chính đề xuất ở §4.3 — đây không phải kịch bản dàn dựng.**
+Sau khi Run #3 (lỗi tiêm cố ý) FAIL đúng như dự kiến, kế hoạch ban đầu chỉ là chạy thêm một lượt
+hoàn nguyên để xác nhận PASS trở lại. Nhưng **Run #4 — hoàn toàn không có lỗi gì được tiêm vào —
+cũng FAIL**. Lý do: baseline lúc đó mới có **1 mẫu = 3ms**, và độ lệch tự nhiên ~1ms của runner
+GitHub-hosted đã tương đương **+33%**, vượt ngay ngưỡng 30% đề xuất ở §4.3.
+
+Điều này lộ ra một lỗi thiết kế thật: **ngưỡng % thuần túy vô nghĩa ở quy mô mili-giây cực nhỏ**,
+vì baseline càng nhỏ thì cùng một lượng nhiễu tuyệt đối càng bị thổi phồng thành % lớn. Sửa lại
+`tools/ci-gate.mjs`: điều kiện hồi quy đổi từ "chỉ cần vượt 30%" thành **"vượt 30% VÀ chênh lệch
+tuyệt đối > 10ms"** — một ngưỡng sàn tuyệt đối bắt buộc đi kèm ngưỡng tương đối. Test lại cục bộ
+trước khi push: nhiễu nhỏ (+33%, 1ms) → PASS; mô phỏng lại hồi quy thật (+433%, 13ms) → vẫn đúng
+FAIL. Run #5 (cùng cấu hình Run #4, không sửa gì phía SUT) xác nhận: PASS trở lại.
+
+**Vì sao đây là phát hiện quan trọng hơn dự tính ban đầu:** §4.3 khi viết trên giấy chỉ đoán
+"ngưỡng 30% có thể quá chặt", nhưng chưa biết chặt tới mức nào. Kết quả CI thật cho thấy nó chặt
+đến mức **một lượt chạy lại hoàn toàn sạch (không lỗi) cũng bị chặn nhầm** — một minh chứng cụ
+thể, đo được, cho đúng loại rủi ro "báo động giả" mà bảng trade-off ở §4.3 đã cảnh báo trên lý
+thuyết. Chi tiết cách tiêm lỗi, cách hoàn nguyên, và bảng phương sai giữa các lượt: xem
+[`ci/ci-runs.md`](../ci/ci-runs.md).
 
 ---
 
