@@ -1,0 +1,126 @@
+name: perf-smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "test-plans/**"
+      - "data/**"
+      - "tools/**"
+      - ".github/workflows/**"
+  pull_request:
+    paths:
+      - "test-plans/**"
+      - "data/**"
+      - "tools/**"
+      - ".github/workflows/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  perf-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout bai lam HW05
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Clone SUT (eshop-sut)
+        run: git clone --depth 1 https://github.com/ttbhanh/eshop-sut sut
+
+      - name: Cai dependency backend SUT
+        working-directory: sut/backend
+        run: npm ci
+
+      - name: Khoi tao DB va chay backend nen
+        working-directory: sut/backend
+        run: |
+          node database.js
+          nohup node server.js > ../../server.log 2>&1 &
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/api/products || true)
+            if [ "$code" = "200" ]; then
+              echo "[OK] Backend san sang sau lan thu $i"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "[FAIL] Backend khong phan hoi 200 sau 30 lan thu (60s)"
+          cat ../../server.log
+          exit 1
+
+      - name: Seed du lieu perf (20 user / 2000 product)
+        run: node tools/seed-perf-data.mjs --users 20 --products 2000
+
+      - name: Cache JMeter 5.6.3
+        id: cache-jmeter
+        uses: actions/cache@v4
+        with:
+          path: jmeter-bin
+          key: jmeter-5.6.3
+
+      - name: Tai JMeter 5.6.3
+        if: steps.cache-jmeter.outputs.cache-hit != 'true'
+        run: |
+          curl -sL https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.zip -o jmeter.zip
+          unzip -q jmeter.zip
+          mv apache-jmeter-5.6.3 jmeter-bin
+
+      - name: Chay JMeter (Load smoke — 5 VU / 60s)
+        run: |
+          mkdir -p results/jtl results/html/ci
+          RUN_ID=$(date +%Y%m%d-%H%M%S)
+          jmeter-bin/bin/jmeter.sh -n \
+            -t test-plans/23127183_Load_20260821.jmx \
+            -Jthreads=5 -Jduration=60 -Jramp=10 \
+            -l results/jtl/ci-$RUN_ID.jtl \
+            -j results/jtl/ci-$RUN_ID.jmeter.log
+
+      - name: Tinh summary tu raw .jtl
+        run: node tools/summarize-jtl.mjs
+
+      - name: In summary vao GITHUB_STEP_SUMMARY
+        run: cat results/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Cong chan hoi quy (ci-gate)
+        run: node tools/ci-gate.mjs
+
+      # ci/baseline.json chi song trong workspace cua lan chay nay - phai commit
+      # lai vao repo thi lan chay SAU moi doc duoc baseline cua lan nay. Chi lam
+      # tren push/workflow_dispatch (co quyen ghi); pull_request tu fork thi GITHUB_TOKEN
+      # thuong chi doc duoc, khong push duoc.
+      - name: Cap nhat ci/baseline.json vao repo
+        if: success() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ci/baseline.json
+          if git diff --cached --quiet; then
+            echo "[SKIP] baseline khong doi"
+          else
+            git commit -m "chore(ci): cap nhat baseline p95 tu run #${{ github.run_number }}"
+            git push
+          fi
+
+      - name: Upload artifact (.jtl + summary.md)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-smoke-${{ github.run_number }}
+          path: |
+            results/jtl/*.jtl
+            results/summary.md
+            ci/baseline.json
+          retention-days: 30

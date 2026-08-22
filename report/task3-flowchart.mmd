@@ -1,0 +1,27 @@
+flowchart TD
+    A[Commit / PR đẩy lên repo SUT] --> B{Có chạm file<br/>ảnh hưởng hiệu năng?}
+    B -->|Không: chỉ .md, test, frontend| C[Bỏ qua perf test<br/>gắn nhãn skipped-perf]
+    B -->|Có: backend/server.js,<br/>database.js, package.json| D{Loại thay đổi?}
+
+    D -->|PR thường| E[Smoke perf: 5 VU × 60s<br/>chỉ workflow rút gọn 3 bước]
+    D -->|Merge vào main| F[Full perf: Load 20 VU × 6 phút]
+    D -->|Nightly 02:00| G[Full + Soak 12 phút]
+
+    E --> H[Sinh .jtl trên runner]
+    F --> H
+    G --> H
+
+    H --> I[Tính p95 / error% / RPS<br/>bằng tools/summarize-jtl.mjs]
+    I --> J{So với baseline<br/>của CÙNG loại runner}
+
+    J -->|p95 tăng > 30%<br/>VÀ ngoài dải nhiễu| K[Chạy lại 1 lần<br/>để xác nhận]
+    J -->|error% > 1%<br/>ngoài 401/403 thiết kế| K
+    J -->|Trong ngưỡng| L[PASS: cập nhật baseline<br/>rolling median 5 lượt gần nhất]
+
+    K --> M{Lần 2 vẫn hồi quy?}
+    M -->|Có| N[FAIL build<br/>comment vào PR kèm bảng số<br/>+ link artifact .jtl]
+    M -->|Không| O[Cảnh báo mềm<br/>ghi vào bảng nhiễu, KHÔNG chặn merge]
+
+    L --> P[Lưu artifact:<br/>.jtl + dashboard, giữ 30 ngày]
+    N --> P
+    O --> P

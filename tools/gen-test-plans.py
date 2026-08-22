@@ -158,7 +158,7 @@ SCENARIOS = {
         "desc": "Tai ky vong, do p95 o trang thai on dinh",
         "thread_groups": [
             {"name": "Storefront Load", "threads": "${__P(threads,20)}",
-             "ramp": 60, "duration": "${__P(duration,360)}", "delay": 0},
+             "ramp": "${__P(ramp,60)}", "duration": "${__P(duration,360)}", "delay": 0},
         ],
         "timer": (1000, 2000),      # think-time 1-3s
         "listener": "summary",

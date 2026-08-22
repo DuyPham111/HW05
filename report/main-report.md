@@ -250,15 +250,63 @@ Toàn bộ prompt và output nguyên văn (không chỉnh sửa) ở [`ai-audit/
 
 ## 4.1 Mô hình
 
-*(Nhúng flow chart mermaid + ảnh `assets/task3-flowchart.svg`.)*
+Đề bài đòi ba động từ bắt buộc: **theo dõi commit** (nút A/B), **quyết định có chạy hay không** (nút B/D/J/K/M), và **gắn cờ hồi quy p95** (nút J/N/O). Cả ba đều có mặt trong flow chart dưới đây (nguồn: [`report/task3-flowchart.mmd`](task3-flowchart.mmd); ảnh tĩnh cho bản PDF: [`assets/task3-flowchart.svg`](assets/task3-flowchart.svg)).
+
+```mermaid
+flowchart TD
+    A[Commit / PR đẩy lên repo SUT] --> B{Có chạm file<br/>ảnh hưởng hiệu năng?}
+    B -->|Không: chỉ .md, test, frontend| C[Bỏ qua perf test<br/>gắn nhãn skipped-perf]
+    B -->|Có: backend/server.js,<br/>database.js, package.json| D{Loại thay đổi?}
+
+    D -->|PR thường| E[Smoke perf: 5 VU × 60s<br/>chỉ workflow rút gọn 3 bước]
+    D -->|Merge vào main| F[Full perf: Load 20 VU × 6 phút]
+    D -->|Nightly 02:00| G[Full + Soak 12 phút]
+
+    E --> H[Sinh .jtl trên runner]
+    F --> H
+    G --> H
+
+    H --> I[Tính p95 / error% / RPS<br/>bằng tools/summarize-jtl.mjs]
+    I --> J{So với baseline<br/>của CÙNG loại runner}
+
+    J -->|p95 tăng > 30%<br/>VÀ ngoài dải nhiễu| K[Chạy lại 1 lần<br/>để xác nhận]
+    J -->|error% > 1%<br/>ngoài 401/403 thiết kế| K
+    J -->|Trong ngưỡng| L[PASS: cập nhật baseline<br/>rolling median 5 lượt gần nhất]
+
+    K --> M{Lần 2 vẫn hồi quy?}
+    M -->|Có| N[FAIL build<br/>comment vào PR kèm bảng số<br/>+ link artifact .jtl]
+    M -->|Không| O[Cảnh báo mềm<br/>ghi vào bảng nhiễu, KHÔNG chặn merge]
+
+    L --> P[Lưu artifact:<br/>.jtl + dashboard, giữ 30 ngày]
+    N --> P
+    O --> P
+```
+
+Bản triển khai thật (thu nhỏ, chỉ nhánh "PR thường" → smoke E) nằm ở [`.github/workflows/perf-smoke.yml`](../.github/workflows/perf-smoke.yml) — xem §4.4 cho kết quả chạy thật.
 
 ## 4.2 Giải thích từng nhánh quyết định
 
-*(Bảng ở `docs/10-TASK3-CONTINUOUS-PERF.md` §2 — mỗi nút một lý do.)*
+| Nút | Quyết định | Vì sao |
+|---|---|---|
+| **B — lọc theo file** | Chỉ chạy khi chạm `backend/**`, `package.json`, `package-lock.json` | Perf test tốn 6–20 phút runner. Chạy cho mọi commit sửa README là đốt tiền vô ích và làm CI chậm tới mức đội ngũ bắt đầu bỏ qua kết quả — đó là cái giá thật sự đắt |
+| **D — chia 3 mức** | PR: smoke 60s · main: Load 6' · nightly: Load + Soak | Đánh đổi giữa **phản hồi nhanh** (PR cần < 5 phút) và **độ tin cậy** (soak cần 12 phút). Rò rỉ bộ nhớ chỉ lộ ra ở lượt dài nên đẩy về nightly |
+| **J — baseline** | So với **rolling median 5 lượt gần nhất trên cùng loại runner** | Không so với một con số cố định: runner của GitHub Actions có phương sai lớn giữa các lượt. Median chống nhiễu tốt hơn trung bình. **"Cùng loại runner"** là bắt buộc — `ubuntu-latest` và máy tự host cho số khác hẳn |
+| **J — ngưỡng 30%** | p95 tăng > 30% mới tính hồi quy | Ngưỡng ban đầu đặt trên giấy dựa theo kinh nghiệm chung; §4.4 đối chiếu với phương sai **đo được thật** trên GitHub-hosted runner và sửa lại con số này |
+| **K — chạy lại xác nhận** | Hồi quy phải tái lập ở lượt 2 mới chặn merge | Đây là cơ chế chống báo động giả rẻ nhất: chi phí gấp đôi **chỉ khi** đã có nghi vấn, thay vì tăng gấp đôi mọi lượt |
+| **O — cảnh báo mềm** | Không tái lập → ghi nhận, không chặn | Một pipeline chặn merge sai vài lần sẽ bị cả đội tắt đi. Giữ được lòng tin quan trọng hơn bắt được 100% hồi quy |
+| **P — artifact 30 ngày** | Giữ `.jtl` thô | Khi có hồi quy thật, cái cần là raw log của **lượt trước đó** để so. Chỉ giữ số tổng hợp thì không điều tra được |
 
 ## 4.3 Trade-off
 
-*(Bảng ≥6 dòng, bắt buộc có **cost** và **false alarms**.)*
+| Trade-off | Chọn gì | Được | Mất |
+|---|---|---|---|
+| **Chi phí runner (cost)** | lọc theo đường dẫn file + 3 mức độ sâu | ~90% commit không chạy perf → tiết kiệm phần lớn phút CI | commit chạm file "vô hại" vẫn có thể gây hồi quy (vd đổi version dependency trong lockfile) → chấp nhận rủi ro, bù bằng nightly |
+| **Báo động giả (false alarms)** | ngưỡng 30% + chạy lại xác nhận | tin cậy được, đội không tắt pipeline | hồi quy nhỏ 10–25% **lọt lưới** → bù bằng theo dõi xu hướng nightly dài hạn |
+| **Bỏ sót (false negative)** | nightly có soak | bắt được rò rỉ bộ nhớ, thứ mà PR test không thể thấy | phát hiện muộn tới 24 giờ |
+| **Runner chia sẻ vs tự host** | GitHub-hosted cho PR, tự host cho nightly | không tốn hạ tầng cho phần chạy nhiều nhất | GitHub-hosted có phương sai lớn → phải nới ngưỡng → giảm độ nhạy |
+| **Độ dài lượt đo** | PR 60s | phản hồi nhanh | 60s **không đủ** qua giai đoạn JIT warm-up của V8 → số của PR chỉ dùng để bắt hồi quy **thô** (2–3 lần), không dùng để chốt SLO |
+| **Baseline cố định vs trôi** | rolling median | tự thích nghi khi hạ tầng thay đổi | **nguy cơ "luộc ếch"**: hiệu năng xấu dần từng chút, baseline trôi theo, không ai báo. → chống bằng **ngưỡng tuyệt đối cứng** (p95 > 500ms là fail bất kể baseline, xem `tools/ci-gate.mjs`) |
+| **Ai chịu trách nhiệm** | comment tự động vào PR kèm bảng số | người gây hồi quy thấy ngay trong ngữ cảnh | comment bot nhiều quá thành nhiễu → chỉ comment khi **FAIL**, PASS thì chỉ đổi check status |
 
 ## 4.4 Đã chạy thật trong CI
 
