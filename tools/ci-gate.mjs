@@ -4,8 +4,14 @@
 // checkout sach, nen "moi nhat" = dung lan nay, khong lan nen tu nhung run cu).
 // So p95 voi median cua ci/baseline.json (5 gia tri gan nhat CUNG mot loai runner).
 //
-// FAIL neu: p95 > median*1.3  HOAC  error% (thuc, da loai 401/403 buoc 7 lockout) > 1%
-//           HOAC p95 > 500ms (nguong tuyet doi, chong "luoc ech" khi baseline troi dan).
+// FAIL neu: (p95 > median*1.3 VA chenh tuyet doi > 10ms)  HOAC
+//           error% (thuc, da loai 401/403 buoc 7 lockout) > 1%  HOAC
+//           p95 > 500ms (nguong tuyet doi, chong "luoc ech" khi baseline troi dan).
+//
+// Sua ngay 22/8: ban dau chi co dieu kien %; mot lan chay CI hoan toan sach (khong
+// tiem loi gi) da FAIL vi baseline luc do chi co 1 mau = 3ms, va 1ms nhieu runner
+// da la +33%. Them dieu kien VA voi do lech tuyet doi >= 10ms de % khong con y nghia
+// gia tao o quy mo mili-giay cuc nho.
 //
 // Cach goi:
 //   node tools/ci-gate.mjs                  tu tim .jtl moi nhat trong results/jtl/
@@ -128,9 +134,15 @@ function main() {
   const baseMedian = baseline.length ? median(baseline) : null;
   const pctChange = baseMedian ? ((p95 - baseMedian) / baseMedian) * 100 : null;
 
+  // Ngan-30-thang-8: nguong 30% THUAN TUY da tung FAIL mot lan chay hoan toan sach
+  // (khong tiem loi gi) chi vi baseline luc do co 1 mau = 3ms — 1ms nhieu tu nhien
+  // cua runner da la +33%. O quy mo mili-giay nho, % tuong doi khong co y nghia neu
+  // khong co san mot do lech TUYET DOI toi thieu di kem. Them MIN_ABS_DELTA_MS lam
+  // dieu kien VA, khong phai HOAC, voi nguong 30%.
+  const MIN_ABS_DELTA_MS = 10;
   const reasons = [];
-  if (baseMedian !== null && p95 > baseMedian * 1.3) {
-    reasons.push(`p95 (${p95}ms) > median baseline × 1.3 (${(baseMedian * 1.3).toFixed(1)}ms)`);
+  if (baseMedian !== null && p95 > baseMedian * 1.3 && p95 - baseMedian > MIN_ABS_DELTA_MS) {
+    reasons.push(`p95 (${p95}ms) > median baseline × 1.3 (${(baseMedian * 1.3).toFixed(1)}ms) VA chenh tuyet doi ${(p95 - baseMedian).toFixed(1)}ms > ${MIN_ABS_DELTA_MS}ms`);
   }
   if (realErrPct > 1) {
     reasons.push(`error% thuc (${realErrPct.toFixed(2)}%) > 1%`);
