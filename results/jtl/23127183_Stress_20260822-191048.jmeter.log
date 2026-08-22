@@ -1,0 +1,595 @@
+2026-08-22 19:10:52,094 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2026-08-22 19:10:52,128 INFO o.a.j.JMeter: Loading user properties from: D:\jmeter\apache-jmeter-5.6.3\bin\user.properties
+2026-08-22 19:10:52,129 INFO o.a.j.JMeter: Loading system properties from: D:\jmeter\apache-jmeter-5.6.3\bin\system.properties
+2026-08-22 19:10:52,130 INFO o.a.j.JMeter: Setting JMeter property: datadir=data
+2026-08-22 19:10:52,130 INFO o.a.j.JMeter: Setting JMeter property: host=127.0.0.1
+2026-08-22 19:10:52,130 INFO o.a.j.JMeter: Setting JMeter property: port=3000
+2026-08-22 19:10:52,143 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2026-08-22 19:10:52,143 INFO o.a.j.JMeter: Version 5.6.3
+2026-08-22 19:10:52,143 INFO o.a.j.JMeter: java.version=17.0.19
+2026-08-22 19:10:52,144 INFO o.a.j.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
+2026-08-22 19:10:52,144 INFO o.a.j.JMeter: os.name=Windows 11
+2026-08-22 19:10:52,144 INFO o.a.j.JMeter: os.arch=amd64
+2026-08-22 19:10:52,144 INFO o.a.j.JMeter: os.version=10.0
+2026-08-22 19:10:52,144 INFO o.a.j.JMeter: file.encoding=Cp1258
+2026-08-22 19:10:52,144 INFO o.a.j.JMeter: java.awt.headless=true
+2026-08-22 19:10:52,144 INFO o.a.j.JMeter: Max memory     =4294967296
+2026-08-22 19:10:52,144 INFO o.a.j.JMeter: Available Processors =8
+2026-08-22 19:10:52,155 INFO o.a.j.JMeter: Default Locale=English (EN)
+2026-08-22 19:10:52,156 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2026-08-22 19:10:52,156 INFO o.a.j.JMeter: JMeterHome=D:\jmeter\apache-jmeter-5.6.3
+2026-08-22 19:10:52,156 INFO o.a.j.JMeter: user.dir  =D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing
+2026-08-22 19:10:52,156 INFO o.a.j.JMeter: PWD       =D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing
+2026-08-22 19:10:52,159 INFO o.a.j.JMeter: IP: 192.168.1.8 Name: Pham_Vu_Ngoc_Duy FullName: 192.168.1.8
+2026-08-22 19:10:52,181 INFO o.a.j.JMeter: Setting property 'jmeter.reportgenerator.outputdir' to:'D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing\results\html\stress'
+2026-08-22 19:10:52,183 INFO o.a.j.s.FileServer: Default base='D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing'
+2026-08-22 19:10:52,186 INFO o.a.j.s.FileServer: Set new base='D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing\test-plans'
+2026-08-22 19:10:52,500 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2026-08-22 19:10:52,541 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2026-08-22 19:10:52,548 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2026-08-22 19:10:52,555 INFO o.a.j.s.SaveService: Loading file: test-plans\23127183_Stress_20260821.jmx
+2026-08-22 19:10:52,697 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-08-22 19:10:52,697 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-08-22 19:10:52,697 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-08-22 19:10:52,697 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-08-22 19:10:52,697 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2026-08-22 19:10:52,697 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2026-08-22 19:10:52,812 INFO o.a.j.JMeter: Creating summariser <summary>
+2026-08-22 19:10:52,818 INFO o.a.j.r.d.ReportGenerator: ReportGenerator will use for Parsing the separator: ','
+2026-08-22 19:10:52,818 INFO o.a.j.r.d.ReportGenerator: Will generate report at end of test from  results file: results/jtl/23127183_Stress_20260822-191048.jtl
+2026-08-22 19:10:52,818 INFO o.a.j.r.d.ReportGenerator: Reading report generator properties from: D:\jmeter\apache-jmeter-5.6.3\bin\reportgenerator.properties
+2026-08-22 19:10:52,819 INFO o.a.j.r.d.ReportGenerator: Merging with JMeter properties
+2026-08-22 19:10:52,824 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.temp_dir' not found, using default value 'temp' instead.
+2026-08-22 19:10:52,829 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.apdex_per_transaction' not found, using default value 'null' instead.
+2026-08-22 19:10:52,829 INFO o.a.j.r.c.ReportGeneratorConfiguration: apdex_per_transaction is empty, not APDEX per transaction customization
+2026-08-22 19:10:52,829 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.sample_filter' not found, using default value 'null' instead.
+2026-08-22 19:10:52,829 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.report_title' not found, using default value 'null' instead.
+2026-08-22 19:10:52,830 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.start_date' not found, using default value 'null' instead.
+2026-08-22 19:10:52,830 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.end_date' not found, using default value 'null' instead.
+2026-08-22 19:10:52,830 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.date_format' not found, using default value 'null' instead.
+2026-08-22 19:10:52,830 INFO o.a.j.r.c.ReportGeneratorConfiguration: Will use date range start date: null, end date: null
+2026-08-22 19:10:52,835 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.totalTPS.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,835 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.activeThreadsOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,835 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.timeVsThreads.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,836 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.responseTimeDistribution.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,836 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.transactionsPerSecond.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,836 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.responseTimePercentiles.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,836 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.responseTimePercentilesOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,836 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.responseTimesOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,836 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.connectTimeOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,837 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.latenciesOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-08-22 19:10:52,838 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.json.filters_only_sample_series' not found, using default value 'true' instead.
+2026-08-22 19:10:52,839 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.json.series_filter' not found, using default value '' instead.
+2026-08-22 19:10:52,839 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.json.show_controllers_only' not found, using default value 'false' instead.
+2026-08-22 19:10:52,839 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.html.filters_only_sample_series' not found, using default value 'true' instead.
+2026-08-22 19:10:52,839 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.html.series_filter' not found, using default value '' instead.
+2026-08-22 19:10:52,839 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.html.show_controllers_only' not found, using default value 'false' instead.
+2026-08-22 19:10:52,855 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2026-08-22 19:10:52,856 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-08-22 19:10:52,856 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-08-22 19:10:52,865 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2026-08-22 19:10:52,865 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2026-08-22 19:10:52,961 INFO o.a.j.JMeter: Running test (1787400652961)
+2026-08-22 19:10:52,984 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : Bac 1 - 25 VU
+2026-08-22 19:10:52,985 INFO o.a.j.e.StandardJMeterEngine: Starting 25 threads for group Bac 1 - 25 VU.
+2026-08-22 19:10:52,985 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-08-22 19:10:52,985 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=25 ramp-up=10 delayedStart=false
+2026-08-22 19:10:53,032 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2026-08-22 19:10:53,032 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 2 : Bac 2 - them 25 (=50)
+2026-08-22 19:10:53,032 INFO o.a.j.e.StandardJMeterEngine: Starting 25 threads for group Bac 2 - them 25 (=50).
+2026-08-22 19:10:53,032 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-08-22 19:10:53,033 INFO o.a.j.t.ThreadGroup: Starting thread group... number=2 threads=25 ramp-up=10 delayedStart=false
+2026-08-22 19:10:53,062 INFO o.a.j.t.ThreadGroup: Started thread group number 2
+2026-08-22 19:10:53,062 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 3 : Bac 3 - them 50 (=100)
+2026-08-22 19:10:53,062 INFO o.a.j.e.StandardJMeterEngine: Starting 50 threads for group Bac 3 - them 50 (=100).
+2026-08-22 19:10:53,062 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-08-22 19:10:53,062 INFO o.a.j.t.ThreadGroup: Starting thread group... number=3 threads=50 ramp-up=15 delayedStart=false
+2026-08-22 19:10:53,126 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-1
+2026-08-22 19:10:53,131 INFO o.a.j.t.ThreadGroup: Started thread group number 3
+2026-08-22 19:10:53,131 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 4 : Bac 4 - them 100 (=200)
+2026-08-22 19:10:53,131 INFO o.a.j.e.StandardJMeterEngine: Starting 100 threads for group Bac 4 - them 100 (=200).
+2026-08-22 19:10:53,131 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-08-22 19:10:53,132 INFO o.a.j.t.ThreadGroup: Starting thread group... number=4 threads=100 ramp-up=20 delayedStart=false
+2026-08-22 19:10:53,132 INFO o.a.j.s.FileServer: Stored: data/orders.csv
+2026-08-22 19:10:53,191 INFO o.a.j.s.FileServer: Stored: data/products.csv
+2026-08-22 19:10:53,192 INFO o.a.j.s.FileServer: Stored: data/search-terms.csv
+2026-08-22 19:10:53,193 INFO o.a.j.s.FileServer: Stored: data/users_lockout.csv
+2026-08-22 19:10:53,194 INFO o.a.j.s.FileServer: Stored: data/users.csv
+2026-08-22 19:10:53,213 INFO o.a.j.t.ThreadGroup: Started thread group number 4
+2026-08-22 19:10:53,213 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2026-08-22 19:10:53,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-2
+2026-08-22 19:10:53,649 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = Pham_Vu_Ngoc_Duy
+2026-08-22 19:10:53,656 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2026-08-22 19:10:53,657 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2026-08-22 19:10:53,657 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to UTF-8
+2026-08-22 19:10:53,658 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2026-08-22 19:10:53,658 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2026-08-22 19:10:53,921 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-3
+2026-08-22 19:10:54,332 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-4
+2026-08-22 19:10:54,724 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-5
+2026-08-22 19:10:55,128 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-6
+2026-08-22 19:10:55,536 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-7
+2026-08-22 19:10:55,930 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-8
+2026-08-22 19:10:56,320 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-9
+2026-08-22 19:10:56,713 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-10
+2026-08-22 19:10:57,108 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-11
+2026-08-22 19:10:57,516 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-12
+2026-08-22 19:10:57,907 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-13
+2026-08-22 19:10:58,314 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-14
+2026-08-22 19:10:58,721 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-15
+2026-08-22 19:10:58,833 INFO o.a.j.u.JsseSSLManager: Using default SSL protocol: TLS
+2026-08-22 19:10:58,833 INFO o.a.j.u.JsseSSLManager: SSL session context: per-thread
+2026-08-22 19:10:59,107 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-16
+2026-08-22 19:10:59,498 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-17
+2026-08-22 19:10:59,918 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-18
+2026-08-22 19:11:00,020 INFO o.a.j.r.Summariser: summary +     80 in 00:00:07 =   11.3/s Avg:     7 Min:     2 Max:    66 Err:     0 (0.00%) Active: 18 Started: 18 Finished: 0
+2026-08-22 19:11:00,309 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-19
+2026-08-22 19:11:00,714 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-20
+2026-08-22 19:11:01,090 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-21
+2026-08-22 19:11:01,495 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-22
+2026-08-22 19:11:01,899 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-23
+2026-08-22 19:11:02,290 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-24
+2026-08-22 19:11:02,697 INFO o.a.j.t.JMeterThread: Thread started: Bac 1 - 25 VU 1-25
+2026-08-22 19:11:30,041 INFO o.a.j.r.Summariser: summary +   1126 in 00:00:30 =   37.5/s Avg:     8 Min:     1 Max:   111 Err:     0 (0.00%) Active: 25 Started: 25 Finished: 0
+2026-08-22 19:11:30,043 INFO o.a.j.r.Summariser: summary =   1206 in 00:00:37 =   32.5/s Avg:     8 Min:     1 Max:   111 Err:     0 (0.00%)
+2026-08-22 19:12:00,035 INFO o.a.j.r.Summariser: summary +   1133 in 00:00:30 =   37.8/s Avg:     8 Min:     1 Max:   102 Err:     0 (0.00%) Active: 25 Started: 25 Finished: 0
+2026-08-22 19:12:00,036 INFO o.a.j.r.Summariser: summary =   2339 in 00:01:07 =   34.9/s Avg:     8 Min:     1 Max:   111 Err:     0 (0.00%)
+2026-08-22 19:12:23,035 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-1
+2026-08-22 19:12:23,439 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-2
+2026-08-22 19:12:23,860 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-3
+2026-08-22 19:12:24,255 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-4
+2026-08-22 19:12:24,659 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-5
+2026-08-22 19:12:25,049 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-6
+2026-08-22 19:12:25,452 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-7
+2026-08-22 19:12:25,866 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-8
+2026-08-22 19:12:26,245 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-9
+2026-08-22 19:12:26,648 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-10
+2026-08-22 19:12:27,053 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-11
+2026-08-22 19:12:27,446 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-12
+2026-08-22 19:12:27,840 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-13
+2026-08-22 19:12:28,247 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-14
+2026-08-22 19:12:28,640 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-15
+2026-08-22 19:12:29,061 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-16
+2026-08-22 19:12:29,452 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-17
+2026-08-22 19:12:29,859 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-18
+2026-08-22 19:12:30,019 INFO o.a.j.r.Summariser: summary +   1231 in 00:00:30 =   41.1/s Avg:     7 Min:     1 Max:    83 Err:     0 (0.00%) Active: 43 Started: 43 Finished: 0
+2026-08-22 19:12:30,020 INFO o.a.j.r.Summariser: summary =   3570 in 00:01:37 =   36.8/s Avg:     8 Min:     1 Max:   111 Err:     0 (0.00%)
+2026-08-22 19:12:30,248 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-19
+2026-08-22 19:12:30,653 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-20
+2026-08-22 19:12:31,045 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-21
+2026-08-22 19:12:31,450 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-22
+2026-08-22 19:12:31,841 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-23
+2026-08-22 19:12:32,248 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-24
+2026-08-22 19:12:32,650 INFO o.a.j.t.JMeterThread: Thread started: Bac 2 - them 25 (=50) 2-25
+2026-08-22 19:13:00,023 INFO o.a.j.r.Summariser: summary +   2232 in 00:00:30 =   74.4/s Avg:     9 Min:     1 Max:    53 Err:     0 (0.00%) Active: 50 Started: 50 Finished: 0
+2026-08-22 19:13:00,024 INFO o.a.j.r.Summariser: summary =   5802 in 00:02:07 =   45.7/s Avg:     8 Min:     1 Max:   111 Err:     0 (0.00%)
+2026-08-22 19:13:30,002 INFO o.a.j.r.Summariser: summary +   2285 in 00:00:30 =   76.2/s Avg:     9 Min:     1 Max:    66 Err:     0 (0.00%) Active: 50 Started: 50 Finished: 0
+2026-08-22 19:13:30,003 INFO o.a.j.r.Summariser: summary =   8087 in 00:02:37 =   51.5/s Avg:     8 Min:     1 Max:   111 Err:     0 (0.00%)
+2026-08-22 19:13:53,064 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-1
+2026-08-22 19:13:53,363 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-2
+2026-08-22 19:13:53,663 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-3
+2026-08-22 19:13:53,965 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-4
+2026-08-22 19:13:54,263 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-5
+2026-08-22 19:13:54,564 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-6
+2026-08-22 19:13:54,864 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-7
+2026-08-22 19:13:55,163 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-8
+2026-08-22 19:13:55,462 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-9
+2026-08-22 19:13:55,763 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-10
+2026-08-22 19:13:56,064 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-11
+2026-08-22 19:13:56,365 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-12
+2026-08-22 19:13:56,664 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-13
+2026-08-22 19:13:56,963 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-14
+2026-08-22 19:13:57,262 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-15
+2026-08-22 19:13:57,562 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-16
+2026-08-22 19:13:57,864 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-17
+2026-08-22 19:13:58,162 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-18
+2026-08-22 19:13:58,464 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-19
+2026-08-22 19:13:58,764 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-20
+2026-08-22 19:13:59,066 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-21
+2026-08-22 19:13:59,365 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-22
+2026-08-22 19:13:59,663 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-23
+2026-08-22 19:13:59,965 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-24
+2026-08-22 19:14:00,009 INFO o.a.j.r.Summariser: summary +   2390 in 00:00:30 =   79.6/s Avg:     9 Min:     1 Max:    77 Err:     0 (0.00%) Active: 74 Started: 74 Finished: 0
+2026-08-22 19:14:00,011 INFO o.a.j.r.Summariser: summary =  10477 in 00:03:07 =   56.0/s Avg:     9 Min:     1 Max:   111 Err:     0 (0.00%)
+2026-08-22 19:14:00,262 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-25
+2026-08-22 19:14:00,564 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-26
+2026-08-22 19:14:00,864 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-27
+2026-08-22 19:14:01,164 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-28
+2026-08-22 19:14:01,463 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-29
+2026-08-22 19:14:01,763 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-30
+2026-08-22 19:14:02,065 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-31
+2026-08-22 19:14:02,363 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-32
+2026-08-22 19:14:02,662 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-33
+2026-08-22 19:14:02,964 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-34
+2026-08-22 19:14:03,263 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-35
+2026-08-22 19:14:03,563 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-36
+2026-08-22 19:14:03,862 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-37
+2026-08-22 19:14:04,163 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-38
+2026-08-22 19:14:04,462 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-39
+2026-08-22 19:14:04,763 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-40
+2026-08-22 19:14:05,064 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-41
+2026-08-22 19:14:05,362 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-42
+2026-08-22 19:14:05,664 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-43
+2026-08-22 19:14:05,962 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-44
+2026-08-22 19:14:06,263 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-45
+2026-08-22 19:14:06,562 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-46
+2026-08-22 19:14:06,864 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-47
+2026-08-22 19:14:07,163 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-48
+2026-08-22 19:14:07,463 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-49
+2026-08-22 19:14:07,763 INFO o.a.j.t.JMeterThread: Thread started: Bac 3 - them 50 (=100) 3-50
+2026-08-22 19:14:30,007 INFO o.a.j.r.Summariser: summary +   4274 in 00:00:30 =  142.5/s Avg:    26 Min:     1 Max:   432 Err:     0 (0.00%) Active: 100 Started: 100 Finished: 0
+2026-08-22 19:14:30,008 INFO o.a.j.r.Summariser: summary =  14751 in 00:03:37 =   68.0/s Avg:    14 Min:     1 Max:   432 Err:     0 (0.00%)
+2026-08-22 19:15:00,015 INFO o.a.j.r.Summariser: summary +   4494 in 00:00:30 =  149.8/s Avg:    18 Min:     1 Max:   165 Err:     0 (0.00%) Active: 100 Started: 100 Finished: 0
+2026-08-22 19:15:00,016 INFO o.a.j.r.Summariser: summary =  19245 in 00:04:07 =   77.9/s Avg:    14 Min:     1 Max:   432 Err:     0 (0.00%)
+2026-08-22 19:15:23,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-1
+2026-08-22 19:15:23,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-2
+2026-08-22 19:15:23,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-3
+2026-08-22 19:15:23,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-4
+2026-08-22 19:15:23,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-5
+2026-08-22 19:15:24,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-6
+2026-08-22 19:15:24,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-7
+2026-08-22 19:15:24,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-8
+2026-08-22 19:15:24,734 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-9
+2026-08-22 19:15:24,934 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-10
+2026-08-22 19:15:25,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-11
+2026-08-22 19:15:25,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-12
+2026-08-22 19:15:25,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-13
+2026-08-22 19:15:25,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-14
+2026-08-22 19:15:25,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-15
+2026-08-22 19:15:26,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-16
+2026-08-22 19:15:26,334 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-17
+2026-08-22 19:15:26,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-18
+2026-08-22 19:15:26,732 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-19
+2026-08-22 19:15:26,934 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-20
+2026-08-22 19:15:27,135 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-21
+2026-08-22 19:15:27,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-22
+2026-08-22 19:15:27,535 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-23
+2026-08-22 19:15:27,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-24
+2026-08-22 19:15:27,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-25
+2026-08-22 19:15:28,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-26
+2026-08-22 19:15:28,332 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-27
+2026-08-22 19:15:28,532 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-28
+2026-08-22 19:15:28,732 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-29
+2026-08-22 19:15:28,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-30
+2026-08-22 19:15:29,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-31
+2026-08-22 19:15:29,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-32
+2026-08-22 19:15:29,532 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-33
+2026-08-22 19:15:29,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-34
+2026-08-22 19:15:29,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-35
+2026-08-22 19:15:30,001 INFO o.a.j.r.Summariser: summary +   4601 in 00:00:30 =  153.4/s Avg:    18 Min:     1 Max:   137 Err:     0 (0.00%) Active: 135 Started: 135 Finished: 0
+2026-08-22 19:15:30,001 INFO o.a.j.r.Summariser: summary =  23846 in 00:04:37 =   86.1/s Avg:    15 Min:     1 Max:   432 Err:     0 (0.00%)
+2026-08-22 19:15:30,132 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-36
+2026-08-22 19:15:30,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-37
+2026-08-22 19:15:30,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-38
+2026-08-22 19:15:30,732 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-39
+2026-08-22 19:15:30,932 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-40
+2026-08-22 19:15:31,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-41
+2026-08-22 19:15:31,334 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-42
+2026-08-22 19:15:31,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-43
+2026-08-22 19:15:31,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-44
+2026-08-22 19:15:31,932 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-45
+2026-08-22 19:15:32,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-46
+2026-08-22 19:15:32,332 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-47
+2026-08-22 19:15:32,532 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-48
+2026-08-22 19:15:32,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-49
+2026-08-22 19:15:32,934 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-50
+2026-08-22 19:15:33,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-51
+2026-08-22 19:15:33,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-52
+2026-08-22 19:15:33,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-53
+2026-08-22 19:15:33,734 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-54
+2026-08-22 19:15:33,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-55
+2026-08-22 19:15:34,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-56
+2026-08-22 19:15:34,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-57
+2026-08-22 19:15:34,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-58
+2026-08-22 19:15:34,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-59
+2026-08-22 19:15:34,934 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-60
+2026-08-22 19:15:35,134 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-61
+2026-08-22 19:15:35,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-62
+2026-08-22 19:15:35,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-63
+2026-08-22 19:15:35,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-64
+2026-08-22 19:15:35,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-65
+2026-08-22 19:15:36,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-66
+2026-08-22 19:15:36,334 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-67
+2026-08-22 19:15:36,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-68
+2026-08-22 19:15:36,734 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-69
+2026-08-22 19:15:36,934 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-70
+2026-08-22 19:15:37,134 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-71
+2026-08-22 19:15:37,334 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-72
+2026-08-22 19:15:37,534 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-73
+2026-08-22 19:15:37,734 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-74
+2026-08-22 19:15:37,934 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-75
+2026-08-22 19:15:38,134 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-76
+2026-08-22 19:15:38,334 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-77
+2026-08-22 19:15:38,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-78
+2026-08-22 19:15:38,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-79
+2026-08-22 19:15:38,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-80
+2026-08-22 19:15:39,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-81
+2026-08-22 19:15:39,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-82
+2026-08-22 19:15:39,535 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-83
+2026-08-22 19:15:39,734 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-84
+2026-08-22 19:15:39,934 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-85
+2026-08-22 19:15:40,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-86
+2026-08-22 19:15:40,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-87
+2026-08-22 19:15:40,533 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-88
+2026-08-22 19:15:40,734 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-89
+2026-08-22 19:15:40,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-90
+2026-08-22 19:15:41,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-91
+2026-08-22 19:15:41,334 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-92
+2026-08-22 19:15:41,532 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-93
+2026-08-22 19:15:41,735 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-94
+2026-08-22 19:15:41,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-95
+2026-08-22 19:15:42,133 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-96
+2026-08-22 19:15:42,333 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-97
+2026-08-22 19:15:42,532 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-98
+2026-08-22 19:15:42,733 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-99
+2026-08-22 19:15:42,933 INFO o.a.j.t.JMeterThread: Thread started: Bac 4 - them 100 (=200) 4-100
+2026-08-22 19:16:00,024 INFO o.a.j.r.Summariser: summary +   7121 in 00:00:30 =  237.2/s Avg:   131 Min:     0 Max:   631 Err:     0 (0.00%) Active: 200 Started: 200 Finished: 0
+2026-08-22 19:16:00,025 INFO o.a.j.r.Summariser: summary =  30967 in 00:05:07 =  100.8/s Avg:    42 Min:     0 Max:   631 Err:     0 (0.00%)
+2026-08-22 19:16:30,004 INFO o.a.j.r.Summariser: summary +   7592 in 00:00:30 =  253.2/s Avg:   141 Min:     1 Max:   576 Err:     0 (0.00%) Active: 200 Started: 200 Finished: 0
+2026-08-22 19:16:30,004 INFO o.a.j.r.Summariser: summary =  38559 in 00:05:37 =  114.4/s Avg:    61 Min:     0 Max:   631 Err:     0 (0.00%)
+2026-08-22 19:17:00,002 INFO o.a.j.r.Summariser: summary +   7474 in 00:00:30 =  249.1/s Avg:   151 Min:     2 Max:   685 Err:     0 (0.00%) Active: 200 Started: 200 Finished: 0
+2026-08-22 19:17:00,002 INFO o.a.j.r.Summariser: summary =  46033 in 00:06:07 =  125.4/s Avg:    76 Min:     0 Max:   685 Err:     0 (0.00%)
+2026-08-22 19:17:30,005 INFO o.a.j.r.Summariser: summary +   7754 in 00:00:30 =  258.4/s Avg:   121 Min:     0 Max:   633 Err:     0 (0.00%) Active: 200 Started: 200 Finished: 0
+2026-08-22 19:17:30,005 INFO o.a.j.r.Summariser: summary =  53787 in 00:06:37 =  135.5/s Avg:    82 Min:     0 Max:   685 Err:     0 (0.00%)
+2026-08-22 19:17:52,230 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-23
+2026-08-22 19:17:52,255 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-22
+2026-08-22 19:17:52,255 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-13
+2026-08-22 19:17:52,256 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-8
+2026-08-22 19:17:52,260 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-26
+2026-08-22 19:17:52,277 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-27
+2026-08-22 19:17:52,317 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-68
+2026-08-22 19:17:52,354 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-12
+2026-08-22 19:17:52,397 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-5
+2026-08-22 19:17:52,399 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-9
+2026-08-22 19:17:52,401 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-4
+2026-08-22 19:17:52,411 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-11
+2026-08-22 19:17:52,418 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-1
+2026-08-22 19:17:52,422 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-94
+2026-08-22 19:17:52,427 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-80
+2026-08-22 19:17:52,438 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-7
+2026-08-22 19:17:52,452 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-5
+2026-08-22 19:17:52,453 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-6
+2026-08-22 19:17:52,472 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-79
+2026-08-22 19:17:52,500 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-60
+2026-08-22 19:17:52,501 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-7
+2026-08-22 19:17:52,518 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-4
+2026-08-22 19:17:52,518 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-28
+2026-08-22 19:17:52,519 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-39
+2026-08-22 19:17:52,541 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-24
+2026-08-22 19:17:52,541 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-6
+2026-08-22 19:17:52,543 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-25
+2026-08-22 19:17:52,544 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-82
+2026-08-22 19:17:52,559 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-46
+2026-08-22 19:17:52,564 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-99
+2026-08-22 19:17:52,566 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-29
+2026-08-22 19:17:52,572 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-20
+2026-08-22 19:17:52,576 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-43
+2026-08-22 19:17:52,577 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-20
+2026-08-22 19:17:52,578 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-35
+2026-08-22 19:17:52,579 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-19
+2026-08-22 19:17:52,580 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-40
+2026-08-22 19:17:52,587 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-45
+2026-08-22 19:17:52,591 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-2
+2026-08-22 19:17:52,593 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-63
+2026-08-22 19:17:52,601 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-6
+2026-08-22 19:17:52,617 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-62
+2026-08-22 19:17:52,631 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-87
+2026-08-22 19:17:52,632 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-33
+2026-08-22 19:17:52,640 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-44
+2026-08-22 19:17:52,640 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-4
+2026-08-22 19:17:52,643 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-36
+2026-08-22 19:17:52,646 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-41
+2026-08-22 19:17:52,646 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-24
+2026-08-22 19:17:52,653 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-23
+2026-08-22 19:17:52,661 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-83
+2026-08-22 19:17:52,664 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-19
+2026-08-22 19:17:52,667 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-1
+2026-08-22 19:17:52,675 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-25
+2026-08-22 19:17:52,676 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-12
+2026-08-22 19:17:52,677 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-3
+2026-08-22 19:17:52,677 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-21
+2026-08-22 19:17:52,677 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-43
+2026-08-22 19:17:52,678 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-32
+2026-08-22 19:17:52,694 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-3
+2026-08-22 19:17:52,694 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-3
+2026-08-22 19:17:52,701 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-22
+2026-08-22 19:17:52,701 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-17
+2026-08-22 19:17:52,702 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-7
+2026-08-22 19:17:52,702 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-15
+2026-08-22 19:17:52,704 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-24
+2026-08-22 19:17:52,710 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-58
+2026-08-22 19:17:52,711 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-21
+2026-08-22 19:17:52,731 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-9
+2026-08-22 19:17:52,733 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-29
+2026-08-22 19:17:52,733 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-21
+2026-08-22 19:17:52,735 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-14
+2026-08-22 19:17:52,736 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-23
+2026-08-22 19:17:52,753 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-14
+2026-08-22 19:17:52,765 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-19
+2026-08-22 19:17:52,765 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-36
+2026-08-22 19:17:52,766 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-12
+2026-08-22 19:17:52,767 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-3
+2026-08-22 19:17:52,767 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-24
+2026-08-22 19:17:52,770 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-70
+2026-08-22 19:17:52,790 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-55
+2026-08-22 19:17:52,797 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-57
+2026-08-22 19:17:52,799 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-49
+2026-08-22 19:17:52,801 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-32
+2026-08-22 19:17:52,801 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-11
+2026-08-22 19:17:52,801 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-10
+2026-08-22 19:17:52,802 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-39
+2026-08-22 19:17:52,809 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-26
+2026-08-22 19:17:52,809 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-25
+2026-08-22 19:17:52,810 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-86
+2026-08-22 19:17:52,810 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-52
+2026-08-22 19:17:52,813 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-10
+2026-08-22 19:17:52,822 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-76
+2026-08-22 19:17:52,823 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-10
+2026-08-22 19:17:52,823 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-37
+2026-08-22 19:17:52,825 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-78
+2026-08-22 19:17:52,825 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-71
+2026-08-22 19:17:52,836 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-9
+2026-08-22 19:17:52,836 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-6
+2026-08-22 19:17:52,844 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-81
+2026-08-22 19:17:52,844 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-38
+2026-08-22 19:17:52,847 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-35
+2026-08-22 19:17:52,849 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-48
+2026-08-22 19:17:52,871 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-15
+2026-08-22 19:17:52,871 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-17
+2026-08-22 19:17:52,872 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-1
+2026-08-22 19:17:52,873 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-64
+2026-08-22 19:17:52,874 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-13
+2026-08-22 19:17:52,874 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-18
+2026-08-22 19:17:52,874 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-14
+2026-08-22 19:17:52,879 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-69
+2026-08-22 19:17:52,882 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-100
+2026-08-22 19:17:52,890 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-8
+2026-08-22 19:17:52,892 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-17
+2026-08-22 19:17:52,892 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-30
+2026-08-22 19:17:52,895 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-84
+2026-08-22 19:17:52,901 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-1
+2026-08-22 19:17:52,904 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-45
+2026-08-22 19:17:52,907 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-27
+2026-08-22 19:17:52,907 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-9
+2026-08-22 19:17:52,909 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-2
+2026-08-22 19:17:52,910 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-18
+2026-08-22 19:17:52,910 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-16
+2026-08-22 19:17:52,911 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-28
+2026-08-22 19:17:52,912 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-8
+2026-08-22 19:17:52,928 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-51
+2026-08-22 19:17:52,945 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-50
+2026-08-22 19:17:52,953 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-14
+2026-08-22 19:17:52,953 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-2
+2026-08-22 19:17:52,954 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-88
+2026-08-22 19:17:52,956 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-13
+2026-08-22 19:17:52,958 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-5
+2026-08-22 19:17:52,959 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-11
+2026-08-22 19:17:52,961 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-23
+2026-08-22 19:17:52,963 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-66
+2026-08-22 19:17:52,969 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-18
+2026-08-22 19:17:52,970 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-49
+2026-08-22 19:17:52,972 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-5
+2026-08-22 19:17:52,973 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-72
+2026-08-22 19:17:52,979 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-18
+2026-08-22 19:17:52,981 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-15
+2026-08-22 19:17:52,984 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-46
+2026-08-22 19:17:52,985 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-21
+2026-08-22 19:17:52,985 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-73
+2026-08-22 19:17:52,985 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-7
+2026-08-22 19:17:52,987 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-98
+2026-08-22 19:17:52,988 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-89
+2026-08-22 19:17:53,009 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-47
+2026-08-22 19:17:53,009 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-20
+2026-08-22 19:17:53,012 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-44
+2026-08-22 19:17:53,016 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-8
+2026-08-22 19:17:53,017 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-61
+2026-08-22 19:17:53,021 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-16
+2026-08-22 19:17:53,021 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-15
+2026-08-22 19:17:53,040 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 1 - 25 VU 1-22
+2026-08-22 19:17:53,040 INFO o.a.j.t.JMeterThread: Thread finished: Bac 1 - 25 VU 1-22
+2026-08-22 19:17:53,040 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-12
+2026-08-22 19:17:53,041 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-92
+2026-08-22 19:17:53,041 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-2
+2026-08-22 19:17:53,041 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-90
+2026-08-22 19:17:53,041 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-31
+2026-08-22 19:17:53,043 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-54
+2026-08-22 19:17:53,043 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-11
+2026-08-22 19:17:53,046 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-74
+2026-08-22 19:17:53,046 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-25
+2026-08-22 19:17:53,048 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-17
+2026-08-22 19:17:53,050 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-34
+2026-08-22 19:17:53,051 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-97
+2026-08-22 19:17:53,057 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 2 - them 25 (=50) 2-10
+2026-08-22 19:17:53,057 INFO o.a.j.t.JMeterThread: Thread finished: Bac 2 - them 25 (=50) 2-10
+2026-08-22 19:17:53,074 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-16
+2026-08-22 19:17:53,074 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-48
+2026-08-22 19:17:53,074 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-59
+2026-08-22 19:17:53,075 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-42
+2026-08-22 19:17:53,081 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-19
+2026-08-22 19:17:53,082 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-75
+2026-08-22 19:17:53,083 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-42
+2026-08-22 19:17:53,093 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-34
+2026-08-22 19:17:53,093 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-41
+2026-08-22 19:17:53,111 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-16
+2026-08-22 19:17:53,118 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-85
+2026-08-22 19:17:53,118 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 3 - them 50 (=100) 3-20
+2026-08-22 19:17:53,119 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-96
+2026-08-22 19:17:53,119 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-20
+2026-08-22 19:17:53,119 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-47
+2026-08-22 19:17:53,124 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-13
+2026-08-22 19:17:53,163 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-38
+2026-08-22 19:17:53,163 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-77
+2026-08-22 19:17:53,163 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 3 - them 50 (=100) 3-33
+2026-08-22 19:17:53,164 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-33
+2026-08-22 19:17:53,164 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-53
+2026-08-22 19:17:53,165 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-56
+2026-08-22 19:17:53,171 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 4 - them 100 (=200) 4-22
+2026-08-22 19:17:53,171 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 4 - them 100 (=200) 4-37
+2026-08-22 19:17:53,171 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-37
+2026-08-22 19:17:53,171 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-22
+2026-08-22 19:17:53,174 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 3 - them 50 (=100) 3-50
+2026-08-22 19:17:53,175 INFO o.a.j.t.JMeterThread: Thread finished: Bac 3 - them 50 (=100) 3-50
+2026-08-22 19:17:53,177 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-65
+2026-08-22 19:17:53,183 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 4 - them 100 (=200) 4-40
+2026-08-22 19:17:53,183 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-40
+2026-08-22 19:17:53,184 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 4 - them 100 (=200) 4-30
+2026-08-22 19:17:53,184 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-30
+2026-08-22 19:17:53,184 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 4 - them 100 (=200) 4-31
+2026-08-22 19:17:53,184 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-31
+2026-08-22 19:17:53,185 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 4 - them 100 (=200) 4-4
+2026-08-22 19:17:53,185 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-4
+2026-08-22 19:17:53,186 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-67
+2026-08-22 19:17:53,188 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-93
+2026-08-22 19:17:53,188 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-91
+2026-08-22 19:17:53,216 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: Bac 4 - them 100 (=200) 4-95
+2026-08-22 19:17:53,217 INFO o.a.j.t.JMeterThread: Thread finished: Bac 4 - them 100 (=200) 4-95
+2026-08-22 19:17:53,217 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2026-08-22 19:17:53,217 INFO o.a.j.s.FileServer: Close: data/products.csv
+2026-08-22 19:17:53,217 INFO o.a.j.s.FileServer: Close: data/orders.csv
+2026-08-22 19:17:53,217 INFO o.a.j.s.FileServer: Close: data/search-terms.csv
+2026-08-22 19:17:53,217 INFO o.a.j.s.FileServer: Close: data/users.csv
+2026-08-22 19:17:53,217 INFO o.a.j.s.FileServer: Close: data/users_lockout.csv
+2026-08-22 19:17:53,219 INFO o.a.j.r.Summariser: summary +   5841 in 00:00:23 =  251.6/s Avg:   140 Min:     1 Max:   976 Err:     0 (0.00%) Active: 0 Started: 200 Finished: 200
+2026-08-22 19:17:53,219 INFO o.a.j.r.Summariser: summary =  59628 in 00:07:00 =  141.9/s Avg:    88 Min:     0 Max:   976 Err:     0 (0.00%)
+2026-08-22 19:17:53,220 INFO o.a.j.JMeter: Generating Dashboard
+2026-08-22 19:17:53,220 INFO o.a.j.r.d.ReportGenerator: Flushing result collector before report Generation
+2026-08-22 19:17:53,286 INFO o.a.j.r.p.NormalizerSampleConsumer: Using format, 'ms', to parse timeStamp field
+2026-08-22 19:17:55,421 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.AggregateConsumer#stopProducing(): beginDate produced 0 samples
+2026-08-22 19:17:55,421 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.AggregateConsumer#stopProducing(): endDate produced 0 samples
+2026-08-22 19:17:55,423 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.ApdexSummaryConsumer#stopProducing(): apdexSummary produced 0 samples
+2026-08-22 19:17:55,423 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.RequestsSummaryConsumer#stopProducing(): requestsSummary produced 0 samples
+2026-08-22 19:17:55,452 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.StatisticsSummaryConsumer#stopProducing(): statisticsSummary produced 0 samples
+2026-08-22 19:17:55,455 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.Top5ErrorsBySamplerConsumer#stopProducing(): top5ErrorsBySampler produced 0 samples
+2026-08-22 19:17:55,455 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.ErrorsSummaryConsumer#stopProducing(): errorsSummary produced 0 samples
+2026-08-22 19:17:55,455 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.HitsPerSecondGraphConsumer#stopProducing(): hitsPerSecond produced 0 samples
+2026-08-22 19:17:56,069 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.LatencyVSRequestGraphConsumer#stopProducing(): latencyVsRequest produced 0 samples
+2026-08-22 19:17:56,083 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.SyntheticResponseTimeDistributionGraphConsumer#stopProducing(): syntheticResponseTimeDistribution produced 0 samples
+2026-08-22 19:17:56,084 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.BytesThroughputGraphConsumer#stopProducing(): bytesThroughputOverTime produced 0 samples
+2026-08-22 19:17:56,084 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.CodesPerSecondGraphConsumer#stopProducing(): codesPerSecond produced 0 samples
+2026-08-22 19:17:56,551 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimeVSRequestGraphConsumer#stopProducing(): responseTimeVsRequest produced 0 samples
+2026-08-22 19:17:56,554 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.FilterConsumer#stopProducing(): startIntervalControlerFilter produced 417396 samples
+2026-08-22 19:17:56,554 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.TotalTPSGraphConsumer#stopProducing(): totalTPS produced 0 samples
+2026-08-22 19:17:56,554 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ActiveThreadsGraphConsumer#stopProducing(): activeThreadsOverTime produced 0 samples
+2026-08-22 19:17:56,554 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.TimeVSThreadGraphConsumer#stopProducing(): timeVsThreads produced 0 samples
+2026-08-22 19:17:56,556 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimeDistributionGraphConsumer#stopProducing(): responseTimeDistribution produced 0 samples
+2026-08-22 19:17:56,556 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.TransactionsPerSecondGraphConsumer#stopProducing(): transactionsPerSecond produced 0 samples
+2026-08-22 19:17:56,556 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimePercentilesGraphConsumer#stopProducing(): responseTimePercentiles produced 0 samples
+2026-08-22 19:17:56,563 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimePercentilesOverTimeGraphConsumer#stopProducing(): responseTimePercentilesOverTime produced 0 samples
+2026-08-22 19:17:56,567 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimeOverTimeGraphConsumer#stopProducing(): responseTimesOverTime produced 0 samples
+2026-08-22 19:17:56,567 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ConnectTimeOverTimeGraphConsumer#stopProducing(): connectTimeOverTime produced 0 samples
+2026-08-22 19:17:56,567 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.LatencyOverTimeGraphConsumer#stopProducing(): latenciesOverTime produced 0 samples
+2026-08-22 19:17:56,567 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.FilterConsumer#stopProducing(): nameFilter produced 894420 samples
+2026-08-22 19:17:56,567 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.FilterConsumer#stopProducing(): dateRangeFilter produced 178884 samples
+2026-08-22 19:17:56,567 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.NormalizerSampleConsumer#stopProducing(): normalizer produced 59628 samples
+2026-08-22 19:17:56,569 INFO o.a.j.r.p.CsvFileSampleSource: produce(): 59628 samples produced in 3s 212 ms on channel 0
+2026-08-22 19:17:56,569 INFO o.a.j.r.d.ReportGenerator: Exporting data using exporter:'json' of className:'org.apache.jmeter.report.dashboard.JsonExporter'
+2026-08-22 19:17:56,737 INFO o.a.j.r.d.JsonExporter: Found data for consumer statisticsSummary in context
+2026-08-22 19:17:56,737 INFO o.a.j.r.d.JsonExporter: Creating statistics for overall
+2026-08-22 19:17:56,737 INFO o.a.j.r.d.JsonExporter: Creating statistics for other transactions
+2026-08-22 19:17:56,738 INFO o.a.j.r.d.JsonExporter: Checking output folder
+2026-08-22 19:17:56,739 INFO o.a.j.r.d.JsonExporter: Writing statistics JSON to D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing\results\html\stress\statistics.json
+2026-08-22 19:17:56,836 INFO o.a.j.r.d.ReportGenerator: Exporting data using exporter:'html' of className:'org.apache.jmeter.report.dashboard.HtmlTemplateExporter'
+2026-08-22 19:17:56,843 INFO o.a.j.r.d.HtmlTemplateExporter: Will generate dashboard in folder: D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing\results\html\stress
+2026-08-22 19:17:57,073 INFO o.a.j.r.d.HtmlTemplateExporter: Report will be generated in: D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing\results\html\stress, creating folder structure
+2026-08-22 19:17:57,075 INFO o.a.j.r.d.TemplateVisitor: Copying folder from 'D:\jmeter\apache-jmeter-5.6.3\bin\report-template' to 'D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing\results\html\stress', got message: D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing\results\html\stress, found non empty folder with following content [D:\Nam3\HK3\Ki?m th? ph?n m?m\HW05\HW05-Performance-Testing\results\html\stress\statistics.json], will be ignored
+2026-08-22 19:17:57,783 INFO o.a.j.JMeter: Dashboard generated
