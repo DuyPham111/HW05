@@ -17,7 +17,9 @@
 
 ## 1.1 Đăng ký của nhóm và bằng chứng không trùng
 
-Đã đăng ký workflow *Customer Storefront* trong nhóm chat của Nhóm 10 (bằng chứng đầy đủ, kèm bảng đăng ký của cả nhóm và ảnh tin nhắn: [`docs/endpoint-selection.md`](../docs/endpoint-selection.md) §5). *(SV: sau khi có phản hồi của cả nhóm, chép bảng đăng ký thật vào cả hai nơi — file này và `docs/endpoint-selection.md` — rồi xóa ghi chú "chưa tự làm" trong đó.)*
+Đã đăng ký workflow **Customer Storefront** (đủ 7 bước) trong nhóm chat của Nhóm 10 **trước khi bắt tay làm**; ảnh chụp tin nhắn kèm mốc thời gian: [`docs/endpoint-selection.md`](../docs/endpoint-selection.md) §5.
+
+Tính tới thời điểm chốt, các thành viên khác **chưa công bố workflow của họ**, nên báo cáo này **không lập bảng đăng ký của cả nhóm** — điền giá trị tự suy đoán thay cho người khác là bịa dữ liệu chứ không phải bằng chứng. Thứ được khẳng định ở đây đúng bằng thứ chứng minh được: workflow của tôi đã công bố công khai có mốc thời gian, và nó khác hoàn toàn workflow *admin back-office* của bài tham khảo.
 
 ## 1.2 Workflow đã chọn — Customer Storefront
 

@@ -68,14 +68,19 @@ Doc 7 chứa các script mà doc 5/6 **cần để chạy lượt chính thức*
 
 ## 3. Việc CHỈ SINH VIÊN tự làm được (AI không thay được)
 
-| # | Việc | Đề mục | Trạng thái |
-|---|---|---|---|
-| 1 | **Đăng ký workflow trong nhóm chat + chụp màn hình** → `docs/nhom-dang-ky-workflow.png`, điền bảng ở `docs/endpoint-selection.md` §5 | §5 | ❌ **chưa làm** — làm sớm, tránh trùng workflow với bạn khác |
-| 2 | **Chụp ảnh Task Manager cùng khung với JMeter** đúng mốc giây, mỗi lượt 1 ảnh | §6, §11 | ❌ chưa (cần doc 7) |
-| 3 | **Chụp `dxdiag`** → `resource-monitor/screenshots/hardware-dxdiag.png` | §6, §11 | ❌ chưa |
-| 4 | **Quay video ≥6 phút**, unlisted, giọng tiếng Việt | §6, §11 | ❌ chưa |
-| 5 | **Tạo GitHub Issues** cho bug (AI không có quyền trên tài khoản GitHub của bạn) | §6 | ❌ chưa |
-| 6 | Chụp ảnh bằng chứng cho **bug P1** (register không UNIQUE email) | §6 | ❌ chưa |
+> 📖 **Hướng dẫn từng bước chi tiết: [`HUONG-DAN-VIEC-TU-LAM.md`](HUONG-DAN-VIEC-TU-LAM.md)** — bấm gì, gõ gì, lưu tên file gì, kiểm lại thế nào.
+
+| # | Việc | Đề mục | Thời gian | Trạng thái |
+|---|---|---|---|---|
+| 1 | ~~Đăng ký workflow trong nhóm chat + chụp màn hình~~ | §5 | — | ✅ **XONG** — ảnh `docs/nhom-dang-ky-workflow.png`, nhúng ở `endpoint-selection.md` §5 |
+| 2 | **Chụp `dxdiag`** + xuất `dxdiag.txt` | §6, §11 | 5 phút | ❌ chưa — [mục A](HUONG-DAN-VIEC-TU-LAM.md#a-chụp-dxdiag--hardware-report-6-11--5-phút) · **làm được ngay, không phụ thuộc gì** |
+| 3 | **4 ảnh Task Manager cùng khung với JMeter** | §6, §11 | trong lúc chạy | ❌ chưa — [mục B](HUONG-DAN-VIEC-TU-LAM.md#b-chụp-ảnh-task-manager-cùng-khung-với-jmeter-6-11--4-ảnh) · cần doc 7 xong trước |
+| 4 | **4 ảnh bằng chứng bug** (P1, P2, P3, P5) | §6 | 15 phút | ❌ chưa — [mục C](HUONG-DAN-VIEC-TU-LAM.md#c-chụp-ảnh-bằng-chứng-cho-4-bug-6--15-phút) · **làm được ngay** (backend đang chạy) |
+| 5 | **Tạo GitHub Issues** + dán link thật vào `bug-report.md` | §6 | 20 phút | ❌ chưa — [mục D](HUONG-DAN-VIEC-TU-LAM.md#d-tạo-github-issues-6--20-phút) · cần mục 4 xong trước |
+| 6 | **Quay video ≥6 phút**, unlisted, giọng tiếng Việt | §6, §11 | ~1 giờ | ❌ chưa — [mục E](HUONG-DAN-VIEC-TU-LAM.md#e-quay-video-demo--6-phút-6-11--1-giờ) · **làm cuối cùng** |
+
+**Thứ tự đề xuất:** 2 (dxdiag) → 4 (ảnh bug) → 5 (Issues) → 3 (ảnh Task Manager, cùng lúc chạy 4 lượt) → 6 (video).
+Mục 2 và 4 làm được **ngay bây giờ** mà không cần chờ doc 7.
 
 ---
 

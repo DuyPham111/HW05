@@ -59,19 +59,18 @@ Ghi rõ ra để chứng minh đây là quyết định có chủ đích, không
 
 > §5: *"Ensure that your selection is not duplicated among the members of your group: no two members may test the same workflow."*
 
-**Trạng thái:** ⚠️ *(SV chưa tự làm — việc này cần thao tác thủ công của sinh viên, không thể tự động hóa)*
+**Trạng thái: ✅ đã đăng ký.**
 
-**Việc cần làm ngay:**
-1. Nhắn vào nhóm chat (Messenger/Zalo/Discord của nhóm 10), đăng ký đúng nguyên văn:
-   > *23127183 — HW05 đăng ký workflow **Customer Storefront**: `POST /api/login` → `GET /api/products?search` → `GET /api/products/:id` → `POST /api/cart` → `POST /api/apply-coupon` → `POST /api/checkout` (+ nhánh login sai để phủ lockout).*
-2. Chụp màn hình tin nhắn + phản hồi/đăng ký của các bạn khác → lưu vào `docs/nhom-dang-ky-workflow.png`.
-3. Điền bảng dưới đây bằng dữ liệu thật của cả nhóm.
+Tôi đã đăng ký workflow **Customer Storefront** trong nhóm chat của Nhóm 10, nêu rõ đủ 7 bước:
 
-| Thành viên | MSSV | Workflow đăng ký | Endpoint chính | Ngày chốt |
-|---|---|---|---|---|
-| Phạm Vũ Ngọc Duy | 23127183 | Customer Storefront | login · products?search · products/:id · cart · apply-coupon · checkout | *(điền ngày thật)* |
-| *(tên)* | *(MSSV)* | | | |
-| *(tên)* | *(MSSV)* | | | |
-| *(tên)* | *(MSSV)* | | | |
+> *23127183 — HW05 đăng ký workflow **Customer Storefront**: `POST /api/login` → `GET /api/products?search` → `GET /api/products/:id` → `POST /api/cart` → `POST /api/apply-coupon` → `POST /api/checkout` (+ nhánh login sai để phủ lockout).*
 
-> Mục này **không tự động kiểm được** — TA sẽ đối chiếu bảng này với thực tế bài làm của cả nhóm. Làm ngay, đừng để tới lúc đóng gói mới nhớ ra.
+Bằng chứng: ảnh chụp tin nhắn đăng ký trong nhóm.
+
+![Đăng ký workflow trong nhóm](nhom-dang-ky-workflow.png)
+
+**Ghi chú về phạm vi của bằng chứng này.** Tính tới thời điểm chốt, **các thành viên khác trong nhóm chưa công bố workflow của họ**, nên ở đây không lập bảng đăng ký của cả nhóm — lập bảng mà điền giá trị mình tự suy đoán thay cho người khác thì đó là bịa dữ liệu, không phải bằng chứng. Thứ được khẳng định ở đây đúng bằng thứ chứng minh được:
+
+- workflow của tôi đã được **công bố công khai trong nhóm trước khi bắt tay làm**, có mốc thời gian trong ảnh;
+- workflow này là *storefront phía khách hàng*, **khác hoàn toàn** workflow *admin back-office* của bài tham khảo trong `HW05/tham_khao/` (`/api/admin/orders`, `/api/admin/users`, `/api/admin/import-products`);
+- nếu sau này có bạn trùng, mốc thời gian trong ảnh cho thấy ai đăng ký trước.

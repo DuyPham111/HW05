@@ -23,6 +23,13 @@
 | 15 | [GIT COMMIT LOG](15-GIT-COMMIT-LOG.md) | bản đồ 28 commit · xuất log | 5 |
 | 16 | [ĐÓNG GÓI & CHECKLIST](16-DONG-GOI-CHECKLIST.md) | checklist §14 14 mục · lệnh tự kiểm · đóng zip | 5 |
 
+## Hai file phụ trợ (không đánh số)
+
+| File | Nội dung |
+|---|---|
+| [TODO-CON-LAI.md](TODO-CON-LAI.md) | việc đang dồn · **2 bẫy vận hành** (restart xoá DB, `localhost` hỏng) · ứng viên bug · k6 điểm cộng |
+| [HUONG-DAN-VIEC-TU-LAM.md](HUONG-DAN-VIEC-TU-LAM.md) | **cầm tay chỉ việc** 5 việc chỉ SV tự làm được: dxdiag · ảnh Task Manager · ảnh bug · GitHub Issues · video |
+
 ## File bạn phải tự tạo trong `docs/` khi làm
 
 | File | Nội dung | Guide |
