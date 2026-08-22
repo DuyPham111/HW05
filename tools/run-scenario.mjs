@@ -55,6 +55,18 @@ function findPlan() {
   return matches.length ? join(dir, matches[matches.length - 1]) : null;
 }
 
+// QUAN TRONG: duong dan tuyet doi cua repo chua dau tieng Viet ("Kiểm thử phần mềm").
+// Khi goi JMeter qua shell:true (bat buoc vi jmeter.bat can cmd.exe), Java giai ma
+// argv bang ACTIVE CODE PAGE cua he thong (khong phai UTF-8/UTF-16), nen "ể"/"ử"
+// bi hong thanh "?" -> path sai + dau ngoac bi vo -> loi "Bad pathname" va
+// "Unknown arg: th?". Da xac nhan bang thuc nghiem (xem AI Audit LOG lien quan).
+// Cach tranh CHAC CHAN: dung DUONG DAN TUONG DOI (chi ASCII) lam tham so dong lenh,
+// dua vao `cwd: ROOT` (khong bi loi ma hoa nay vi CreateProcess dung wide-string
+// rieng cho current directory, khong qua buoc giai ma argv cua Java).
+function toRel(absPath) {
+  return absPath.slice(ROOT.length + 1).split("\\").join("/");
+}
+
 function stampNow() {
   const d = new Date();
   const p = (n) => String(n).padStart(2, "0");
@@ -63,7 +75,8 @@ function stampNow() {
 
 async function countProducts() {
   try {
-    const r = await fetch(`${API_URL}/api/products`);
+    // Timeout bat buoc — xem ghi chu day du trong tools/reset-lockout.mjs.
+    const r = await fetch(`${API_URL}/api/products`, { signal: AbortSignal.timeout(15000) });
     const j = await r.json();
     return Array.isArray(j) ? j.length : "?";
   } catch {
@@ -90,10 +103,10 @@ async function main() {
   const resCsv = join(resDir, `${SMOKE ? "smoke-" : ""}${base}.resources.csv`);
 
   const jmeterArgs = [
-    "-n", "-t", plan,
-    "-l", jtl,
-    "-j", jmlog,
-    "-e", "-o", htmlDir,
+    "-n", "-t", toRel(plan),
+    "-l", toRel(jtl),
+    "-j", toRel(jmlog),
+    "-e", "-o", toRel(htmlDir),
     "-Jdatadir=data",
     ...(SMOKE ? ["-Jthreads=2", "-Jduration=40"] : []),
     `-Jhost=${new URL(API_URL).hostname}`,
@@ -187,14 +200,14 @@ async function main() {
 
 | | |
 |---|---|
-| Test plan | \`${plan.replace(ROOT + "\\", "").replace(/\\/g, "/")}\` |
+| Test plan | \`${toRel(plan)}\` |
 | Bat dau | ${fmt(startedAt)} |
 | Ket thuc | ${fmt(endedAt)} |
 | Thoi luong | ${durSec}s |
-| Raw \`.jtl\` | \`${jtl.replace(ROOT + "\\", "").replace(/\\/g, "/")}\` |
-| \`jmeter.log\` | \`${jmlog.replace(ROOT + "\\", "").replace(/\\/g, "/")}\` |
-| Dashboard | \`${htmlDir.replace(ROOT + "\\", "").replace(/\\/g, "/")}\` |
-| Resource CSV | \`${resCsv.replace(ROOT + "\\", "").replace(/\\/g, "/")}\` |
+| Raw \`.jtl\` | \`${toRel(jtl)}\` |
+| \`jmeter.log\` | \`${toRel(jmlog)}\` |
+| Dashboard | \`${toRel(htmlDir)}\` |
+| Resource CSV | \`${toRel(resCsv)}\` |
 | \`products\` khi do | ${products} dong |
 | JMeter exit code | ${code} |
 | **Anh Task Manager** | \`resource-monitor/screenshots/taskmgr-${scenario.toLowerCase()}.png\` — *(dien gio chup)* |

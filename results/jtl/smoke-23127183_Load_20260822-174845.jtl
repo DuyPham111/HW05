@@ -1,0 +1,23 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1787395731075,46,01 Login,200,OK,Storefront Load 1-1,text,true,,638,231,1,1,http://127.0.0.1:3000/api/login,46,0,32
+1787395733422,11,02 Search products,200,OK,Storefront Load 1-1,text,true,,20429,184,1,1,http://127.0.0.1:3000/api/products?search=PerfProduct-100,11,0,0
+1787395734638,4,03 Product detail,200,OK,Storefront Load 1-1,text,true,,439,163,1,1,http://127.0.0.1:3000/api/products/6,4,0,0
+1787395737438,6,04 Add to cart,200,OK,Storefront Load 1-1,text,true,,294,364,1,1,http://127.0.0.1:3000/api/cart,6,0,0
+1787395739485,39,05 Apply coupon,200,OK,Storefront Load 1-1,text,true,,399,237,1,1,http://127.0.0.1:3000/api/apply-coupon,39,0,0
+1787395741609,14,06 Checkout,200,OK,Storefront Load 1-1,text,true,,312,420,1,1,http://127.0.0.1:3000/api/checkout,14,0,0
+1787395744604,4,07 Login sai (lockout),401,Unauthorized,Storefront Load 1-1,text,true,,314,233,1,1,http://127.0.0.1:3000/api/login,4,0,0
+1787395747066,3,01 Login,200,OK,Storefront Load 1-1,text,true,,638,231,1,1,http://127.0.0.1:3000/api/login,3,0,1
+1787395748898,12,02 Search products,200,OK,Storefront Load 1-1,text,true,,20420,184,1,1,http://127.0.0.1:3000/api/products?search=PerfProduct-112,12,0,0
+1787395751042,2,03 Product detail,200,OK,Storefront Load 1-1,text,true,,442,164,1,1,http://127.0.0.1:3000/api/products/46,2,0,0
+1787395753770,4,04 Add to cart,200,OK,Storefront Load 1-1,text,true,,294,365,1,1,http://127.0.0.1:3000/api/cart,4,0,0
+1787395755154,5,05 Apply coupon,200,OK,Storefront Load 1-1,text,true,,399,237,1,1,http://127.0.0.1:3000/api/apply-coupon,5,0,0
+1787395757580,52,06 Checkout,200,OK,Storefront Load 1-1,text,true,,312,420,1,1,http://127.0.0.1:3000/api/checkout,52,0,0
+1787395760226,5,07 Login sai (lockout),401,Unauthorized,Storefront Load 1-1,text,true,,314,233,2,2,http://127.0.0.1:3000/api/login,5,0,0
+1787395761471,5,01 Login,200,OK,Storefront Load 1-2,text,true,,638,231,2,2,http://127.0.0.1:3000/api/login,4,0,1
+1787395761472,5,01 Login,200,OK,Storefront Load 1-1,text,true,,640,232,2,2,http://127.0.0.1:3000/api/login,5,0,1
+1787395762751,11,02 Search products,200,OK,Storefront Load 1-2,text,true,,20431,184,2,2,http://127.0.0.1:3000/api/products?search=PerfProduct-128,10,0,0
+1787395764352,11,02 Search products,200,OK,Storefront Load 1-1,text,true,,20426,184,2,2,http://127.0.0.1:3000/api/products?search=PerfProduct-134,10,0,0
+1787395765321,3,03 Product detail,200,OK,Storefront Load 1-2,text,true,,441,164,2,2,http://127.0.0.1:3000/api/products/86,3,0,0
+1787395766673,3,03 Product detail,200,OK,Storefront Load 1-1,text,true,,445,165,2,2,http://127.0.0.1:3000/api/products/126,3,0,0
+1787395767424,5,04 Add to cart,200,OK,Storefront Load 1-2,text,true,,294,365,2,2,http://127.0.0.1:3000/api/cart,5,0,0
+1787395767907,5,04 Add to cart,200,OK,Storefront Load 1-1,text,true,,294,366,1,1,http://127.0.0.1:3000/api/cart,5,0,0

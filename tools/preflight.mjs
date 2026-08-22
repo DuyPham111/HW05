@@ -65,8 +65,12 @@ async function checkJavaVersion() {
   }
 }
 
+// Timeout bat buoc — mot request treo se lam preflight cho mai mai khong bao loi
+// (xem ghi chu day du trong tools/reset-lockout.mjs).
+const FETCH_TIMEOUT_MS = 15000;
+
 async function fetchJson(path, opts = {}) {
-  const res = await fetch(`${API_URL}${path}`, opts);
+  const res = await fetch(`${API_URL}${path}`, { ...opts, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
   let body = null;
   try {
     body = await res.json();

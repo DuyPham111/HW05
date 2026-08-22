@@ -43,12 +43,20 @@ function readEmails(relPath) {
   return lines.slice(1).map((l) => l.split(",")[0].trim()).filter(Boolean);
 }
 
+// TIMEOUT LA BAT BUOC: neu backend treo o mot request bat ky (vd dang bi OOM, hay
+// dang xu ly 200 request khac), fetch() KHONG co timeout se cho MAI MAI — va vi
+// tryLogin() duoc goi tuan tu qua tung batch, MOT request treo se ket toan bo
+// pipeline reset-lockout, roi keo theo run-scenario.mjs, HANG GIO khong bao loi gi.
+// Da xay ra that: mot lan chay --smoke bi treo hon 6 tieng vi ly do nay.
+const FETCH_TIMEOUT_MS = 15000;
+
 async function tryLogin(email) {
   try {
     const res = await fetch(`${API_URL}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password: PASSWORD }),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
     return res.status;
   } catch (e) {
@@ -65,12 +73,14 @@ async function inspectReadOnly(emailSet) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: "admin@eshop.com", password: "Admin123!" }),
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   if (!login.ok) throw new Error(`khong dang nhap duoc admin (HTTP ${login.status})`);
   const { token } = await login.json();
 
   const res = await fetch(`${API_URL}/api/admin/users`, {
     headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   if (!res.ok) throw new Error(`GET /api/admin/users tra HTTP ${res.status}`);
   const users = await res.json();

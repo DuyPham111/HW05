@@ -98,12 +98,13 @@
 - **File `.jtl` sinh ra:** `results/jtl/validate-spike.jtl` (lượt hỏng đầu tiên đã bị ghi đè khi chạy lại)
 - **Con số nào trong báo cáo đến từ lượt này:** bảng 4 cửa sổ §3.4 · human review §2.4 dòng 8–9 · bug P5, P6
 
-### [LOG-011] — `run-scenario.mjs` + `sample-resources.ps1` + `reset-lockout.mjs`
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
+### [LOG-011] — `run-scenario.mjs` + `sample-resources.ps1` + `hardware-report.ps1`, và một lần treo 6 tiếng
+- **Tool:** Claude Code (Sonnet 5)
+- **Date & Time:** 2026-08-22
+- **Prompt:** "đã xong chưa nếu rồi tiếp tục cho tôi" — tiếp tục doc 7 sau khi bị gián đoạn.
+- **AI Output:** Viết 3 script còn thiếu của doc 7: `sample-resources.ps1` (lấy mẫu CPU/RAM theo PID mỗi 2s), `run-scenario.mjs` (điều phối reset lockout → sampler → JMeter → dashboard → run-log), `hardware-report.ps1` (bảng spec máy). Khi kiểm tra tiến độ, phát hiện một lượt `--smoke` chạy nền **đã treo hơn 6 tiếng** mà không có lỗi nào — điều tra bằng `tasklist`/`wmic` cho thấy tiến trình `run-scenario.mjs` vẫn sống nhưng chưa từng khởi động được `java.exe` (JMeter), tức kẹt ở bước reset lockout.
+- **Human Review Notes:** *(SV đã kiểm)* — không chấp nhận "chắc là do máy chậm", mà truy nguyên nhân gốc bằng cách đọc lại code `reset-lockout.mjs`: mọi `fetch()` không có timeout, nên một request treo (backend đang bận hoặc phản hồi chậm) làm `Promise.all` trong `runInBatches` chờ mãi mãi. Đã sửa bằng `AbortSignal.timeout(15000)` ở cả 4 file dùng `fetch` (`reset-lockout.mjs`, `seed-perf-data.mjs`, `preflight.mjs`, `run-scenario.mjs`), rồi **kiểm chứng thực tế**: `reset-lockout --check` chạy xong trong vài giây cho 400 tài khoản. Sau đó chạy `run-scenario.mjs Load --smoke` để kiểm toàn bộ đường ống, và **bắt thêm 2 lỗi khác**: (1) đường dẫn repo chứa dấu tiếng Việt (`Kiểm thử phần mềm`) làm JVM giải mã tham số dòng lệnh qua `shell:true` bị hỏng (`Kiểm` → `Ki?m`, lỗi `Bad pathname` và `Unknown arg: th?`) — sửa bằng cách chuyển mọi tham số `-t/-l/-j/-o` sang đường dẫn tương đối (dựa vào `cwd`, không đi qua bước giải mã ANSI của Java); (2) trong `sample-resources.ps1`, biểu thức `$cpuPct -eq ""` trả về `True` khi `$cpuPct = 0.0` do PowerShell ép kiểu theo toán hạng trái — khiến mọi mẫu lúc tiến trình rảnh (CPU 0%) bị bỏ sót âm thầm; sửa bằng cờ `$havePrev` tường minh. Cả ba lỗi đều được xác nhận đã hết bằng cách chạy lại `--smoke`: kết quả 22 sample, 0% error, 44 giây (so với >6 tiếng trước khi sửa), và `resources.csv` có dữ liệu CPU/RAM thật cho cả `node` lẫn `java` (bắt được `java.exe` đạt 103,2% CPU lúc JMeter sinh dashboard). Cũng phát hiện và sửa: `hardware-report.ps1` dùng `$env:COMPUTERNAME` bị cắt hostname còn 15 ký tự (`PHAM_VU_NGOC_DU` thay vì `Pham_Vu_Ngoc_Duy`) — đúng chỗ §11 kiểm — đổi sang `[System.Net.Dns]::GetHostName()`; và ký tự ngoài ASCII (`—`, `§`) trong file `.ps1` bị PowerShell 5.1 đọc sai do mặc định ANSI — đã bỏ hết khỏi script.
+- **Bằng chứng liên quan:** `tools/run-scenario.mjs`, `tools/sample-resources.ps1`, `tools/hardware-report.ps1` · `results/jtl/smoke-23127183_Load_20260822-174845.jtl` (22 sample, 0% error) · `results/resources/smoke-...resources.csv` (dữ liệu CPU/RAM thật) · `docs/07-CHAY-VA-THU-BANG-CHUNG.md` §1b
 
 ### [LOG-012] — `summarize-jtl.mjs` và đối chiếu chéo với HTML dashboard
 - **Tool:**

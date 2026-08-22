@@ -57,12 +57,17 @@ Doc 7 chứa các script mà doc 5/6 **cần để chạy lượt chính thức*
 | Script | Trạng thái | Ai cần |
 |---|---|---|
 | `tools/reset-lockout.mjs` | ✅ **đã làm sớm** (doc 5 cần) | doc 5, 6, 8 |
-| `tools/run-scenario.mjs` | ❌ chưa | doc 5, 6, 8 |
-| `tools/sample-resources.ps1` | ❌ chưa | doc 5, 6, 8 |
+| `tools/run-scenario.mjs` | ✅ **đã làm + đã kiểm chứng bằng --smoke** | doc 5, 6, 8 |
+| `tools/sample-resources.ps1` | ✅ **đã làm + đã kiểm chứng bằng --smoke** | doc 5, 6, 8 |
 | `tools/summarize-jtl.mjs` | ✅ **đã làm sớm** (doc 6 cần `--windows`) | doc 5, 6, 8, 9 |
-| `tools/hardware-report.ps1` | ❌ chưa | §11 |
+| `tools/hardware-report.ps1` | ✅ **đã làm** — hostname `Pham_Vu_Ngoc_Duy` xác nhận đúng | §11 |
 
-→ **Chưa chạy được lượt chính thức nào** cho tới khi làm xong doc 7. Doc 5 và doc 6 hiện chỉ làm được phần **thiết kế + kiểm chứng cơ chế**.
+→ **Doc 7 đã xong.** Đường ống đã kiểm chứng end-to-end bằng `--smoke` (22 sample, 0% error, 44s). Sẵn sàng chạy 4 lượt chính thức — chỉ còn thiếu bạn tự chụp ảnh Task Manager đúng mốc (xem [`HUONG-DAN-VIEC-TU-LAM.md`](HUONG-DAN-VIEC-TU-LAM.md) mục B).
+
+**3 lỗi thật đã bắt được khi kiểm chứng (chi tiết: [`07-CHAY-VA-THU-BANG-CHUNG.md`](07-CHAY-VA-THU-BANG-CHUNG.md) §1b):**
+1. `fetch()` không timeout → một lượt `--smoke` treo **6 tiếng** không báo lỗi. Đã thêm `AbortSignal.timeout(15000)` vào 4 file.
+2. Đường dẫn có dấu tiếng Việt làm JVM giải mã tham số dòng lệnh sai qua `shell:true`. Đã đổi sang đường dẫn tương đối.
+3. `0.0 -eq ""` trong PowerShell trả về `True` → mọi mẫu lúc CPU=0% bị bỏ sót. Đã sửa bằng cờ tường minh.
 
 ---
 
@@ -105,3 +110,4 @@ Mục 2 và 4 làm được **ngay bây giờ** mà không cần chờ doc 7.
 - ✅ doc 4 — 4 test plan `.jmx`, smoke test, human review 6 lỗi
 - ✅ doc 5 — sửa bậc Stress 60s→90s, kiểm chứng `allThreads` cộng dồn, `reset-lockout.mjs`
 - ✅ doc 6 — thiết kế Spike, `summarize-jtl.mjs` + `--windows`, **lượt validate 19.454 sample 0% error**, phân tích hồi phục 4 cửa sổ
+- ✅ doc 7 — `run-scenario.mjs` + `sample-resources.ps1` + `hardware-report.ps1`, bắt và sửa 3 lỗi thật (fetch treo 6h, encoding path tiếng Việt, PowerShell `-eq` sai kiểu)

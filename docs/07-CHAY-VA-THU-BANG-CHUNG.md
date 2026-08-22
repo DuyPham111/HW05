@@ -21,6 +21,51 @@ screenshots/taskmgr-load.png  giờ trên đồng hồ Windows trong ảnh + mti
 
 ---
 
+## 1b. Ba lỗi thật đã gặp khi dựng bộ script này — đọc trước khi chạy
+
+**Đã tự viết và tự kiểm chứng** `run-scenario.mjs`, `sample-resources.ps1`, `hardware-report.ps1` (không chỉ để prompt mẫu). Ba lỗi dưới đây là lỗi **thật**, bắt được bằng cách chạy `--smoke` (2 VU × 40s) trước khi tin tưởng script:
+
+### 1b.1 `fetch()` không timeout → treo **6 tiếng** không báo lỗi gì
+
+Mọi `fetch()` trong `reset-lockout.mjs`, `seed-perf-data.mjs`, `preflight.mjs`, `run-scenario.mjs` **không có timeout**. Nếu một request bị treo (backend chậm phản hồi, hoặc đang bận xử lý 200 request khác), `Promise.all` trong `runInBatches` chờ **mãi mãi**, và không có gì báo cho bạn biết pipeline đã chết đứng.
+
+**Đã xảy ra thật:** một lượt `--smoke` chạy nền đã treo **hơn 6 tiếng** ở đúng bước reset lockout, trước khi JMeter kịp khởi động. Không có bất kỳ thông báo lỗi nào — script vẫn "đang chạy" trong Task Manager.
+
+**Đã sửa:** thêm `signal: AbortSignal.timeout(15000)` vào mọi lệnh gọi `fetch()`. Giờ một request treo sẽ tự huỷ sau 15 giây và ném lỗi rõ ràng thay vì treo vô hạn.
+
+> **Bài học áp dụng chung:** bất kỳ script nào gọi HTTP trong vòng lặp — kể cả script bạn tự viết cho môn học — đều phải có timeout. Không có timeout không phải là "ổn vì local nhanh", mà là một quả bom hẹn giờ chưa nổ.
+
+### 1b.2 Đường dẫn có dấu tiếng Việt làm JMeter đọc sai tham số dòng lệnh
+
+Thư mục gốc `D:\Nam3\HK3\Kiểm thử phần mềm\...` có dấu tiếng Việt. Khi Node gọi `jmeter.bat` qua `shell: true` (bắt buộc vì `.bat` cần `cmd.exe`), JVM giải mã tham số dòng lệnh theo **bảng mã ANSI của hệ thống**, không phải UTF-8/UTF-16 — nên `ể`, `ử` bị hỏng thành `?`.
+
+**Hậu quả quan sát được:**
+```
+ERROR ... FileManager (D:\Nam3\HK3\Ki?m) java.io.IOException: Bad pathname
+An error occurred: Unknown arg: th?
+```
+(`Kiểm` → `Ki?m`, và `thử` bị tách thành token rác `th?` làm JMeter tưởng là một tham số lạ.)
+
+**Đã sửa:** đổi mọi tham số `-t / -l / -j / -o` truyền cho JMeter sang **đường dẫn tương đối** (chỉ ASCII, vd `test-plans/23127183_Load_....jmx`), dựa vào `cwd` để JMeter tự ghép — vì thư mục làm việc (`cwd`) được đặt qua Windows API dạng chuỗi rộng (wide string), không đi qua bước giải mã ANSI của Java nên không bị lỗi này.
+
+> **Nếu bạn tự viết thêm script gọi JMeter:** luôn dùng đường dẫn tương đối làm tham số `-t/-l/-j/-o`, không dùng đường dẫn tuyệt đối — bất kể máy bạn có dấu tiếng Việt hay không, đây là cách an toàn chung.
+
+### 1b.3 `0.0 -eq ""` trong PowerShell trả về `TRUE`
+
+Bản đầu của `sample-resources.ps1` dùng `if ($cpuPct -eq "") { continue }` để bỏ qua mẫu đầu tiên (chưa có mốc trước để tính CPU%). Nhưng PowerShell ép kiểu toán hạng phải theo toán hạng **trái**: `0.0 -eq ""` cho ra `True` vì `""` bị ép thành `0`. Hậu quả: **mọi mẫu lúc tiến trình đang rảnh (CPU=0%) bị âm thầm bỏ qua**, không chỉ mẫu đầu tiên.
+
+**Đã sửa:** dùng cờ `$havePrev` tường minh thay vì so sánh giá trị.
+
+> Đây là lớp lỗi PowerShell rất dễ mắc: khi so sánh với `-eq`, **luôn đặt hằng số ở bên trái** (`"" -eq $cpuPct`) hoặc dùng biến cờ boolean tường minh — đừng so sánh số với chuỗi rỗng.
+
+**Cả ba lỗi đều được kiểm chứng bằng cách chạy lại `node tools/run-scenario.mjs Load --smoke`** sau khi sửa — kết quả: 22 sample, 0% error, chạy đúng 44 giây (so với hơn 6 tiếng trước khi sửa).
+
+### 1b.4 Một điều cần biết khi đọc `resources/*.csv`: sampler bắt MỌI tiến trình `node.exe`
+
+`sample-resources.ps1` lấy mẫu theo **tên tiến trình**, nên nếu bạn chạy `run-scenario.mjs` (tự nó cũng là một tiến trình `node`) trong lúc backend cũng là `node`, file `.resources.csv` sẽ có **hai dòng `node` khác PID** ở mỗi mốc thời gian. Khi đọc file để lấy RSS/CPU của **backend**, phải lọc đúng PID của backend (ổn định qua nhiều lượt nếu bạn không restart nó) — đừng cộng gộp hai dòng `node` lại, và đừng nhầm PID của chính script chạy lượt đo với PID của SUT.
+
+---
+
 ## 2. `tools/run-scenario.mjs` — một lượt chạy là một lệnh
 
 **Prompt cho AI:**

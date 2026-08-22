@@ -32,10 +32,19 @@ function parseArgs(argv) {
 
 const { users: USER_COUNT, products: PRODUCT_COUNT } = parseArgs(process.argv.slice(2));
 
+// Timeout bat buoc — xem ghi chu trong tools/reset-lockout.mjs: mot request treo
+// se ket toan bo pipeline seed hang gio khong bao loi.
+const FETCH_TIMEOUT_MS = 15000;
+
 async function postJson(path, body, token) {
   const headers = { "Content-Type": "application/json" };
   if (token) headers.Authorization = `Bearer ${token}`;
-  const res = await fetch(`${API_URL}${path}`, { method: "POST", headers, body: JSON.stringify(body) });
+  const res = await fetch(`${API_URL}${path}`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
   let json = null;
   try {
     json = await res.json();
