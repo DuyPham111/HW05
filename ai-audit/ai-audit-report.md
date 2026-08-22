@@ -138,11 +138,12 @@
 - **Human Review Notes:** *(SV đã kiểm)* — phân loại từng đề xuất đối chiếu trực tiếp với code (bảng đầy đủ `report/main-report.md` §3.3): **WAL** và **xoá giỏ hàng** → feasible thật; **thêm index `products.name`** → feasible nhưng vô ích (xác nhận bằng cách đọc lại `server.js:144`: `LIKE '%X%'` wildcard đầu chuỗi không dùng được B-tree index dù có thêm); **connection pool** → hallucinated (xác nhận `sqlite3` của Node không có mô hình client-server); **bcrypt "để cải thiện hiệu năng"** → hallucinated về mặt hiệu năng (bcrypt cố tình chậm, sẽ làm chậm login đi chứ không nhanh hơn — AI trộn lẫn mục tiêu bảo mật với hiệu năng, đây là lỗi tinh vi vì đề xuất *đúng về bảo mật* nên dễ bị chấp nhận nhầm là đúng luôn về hiệu năng). *(SV chưa tự kiểm)* — chưa chạy A/B test thật cho đề xuất WAL (ghi vào `docs/TODO-CON-LAI.md` làm việc điểm cộng).
 
 ### [LOG-016] — Task 3: flow chart + CI pipeline + chạy thật
-- **Tool:**
-- **Date & Time:**
-- **Prompt:**
-- **AI Output:**
-- **Human Review Notes:**
+- **Tool:** Claude Code (agent, quyền chỉnh sửa file + chạy lệnh)
+- **Date & Time:** 2026-08-22
+- **Prompt:** "qua doc 10" — tiếp nối `docs/10-TASK3-CONTINUOUS-PERF.md`: dựng flow chart mermaid (3 nhánh watch/decide/flag), viết `.github/workflows/perf-smoke.yml` + `tools/ci-gate.mjs` theo đúng prompt mẫu trong doc 10 §4, chạy thật ≥4 lượt CI trên GitHub Actions kèm ≥1 lượt FAIL, điền `report/main-report.md` §4.1–4.4.
+- **AI Output:** file `.mmd`+SVG, `perf-smoke.yml`, `ci-gate.mjs`, và 4 lượt CI thật (Run #2 PASS khởi tạo → Run #3 FAIL cố ý → Run #4 FAIL **ngoài kế hoạch** → Run #5 PASS sau khi vá ngưỡng). Chi tiết đầy đủ ở `ci/ci-runs.md`.
+- **Human Review Notes:** *(SV đã kiểm)* — theo dõi trực tiếp cả 5 lượt qua GitHub Actions API/UI, không chỉ tin lời AI báo cáo. Bắt được 3 lỗi thật của chính AI trong lúc làm: (1) `tools/gen-test-plans.py` cũ hardcode `ramp=60` cho Load — nếu không tham số hoá thì `duration=60` của CI sẽ trùng hết ramp, không còn cửa sổ ổn định nào, sửa thành `-Jramp` có default giữ nguyên hành vi lượt Load chính thức cũ; (2) Run #1 treo vô hạn vì `archive.apache.org` không phản hồi — SV tự tay `curl --max-time 30` xác nhận `http=000` trước khi cho AI sửa, không chấp nhận suy đoán suông; (3) **phát hiện quan trọng nhất không phải do AI chủ động tìm ra mà do quan sát log CI thật**: Run #4 (hoàn nguyên, không có lỗi gì) vẫn FAIL vì ngưỡng 30% quá chặt so với baseline 1 mẫu — đây là bằng chứng sống cho việc kết quả CI thật có thể lật ngược giả định ban đầu, đúng tinh thần "Disrupt" của Task 3.
+- **Con số nào trong báo cáo đến từ lượt này:** §4.1–4.4, `ci/ci-runs.md`
 
 ### [LOG-017] — Viết 4 Agent Skill
 - **Tool:**
@@ -150,6 +151,14 @@
 - **Prompt:**
 - **AI Output:**
 - **Human Review Notes:**
+
+### [LOG-018] — Doc 11: kiểm chứng bug bằng request thật + `verify-bugs.mjs`
+- **Tool:** Claude Code (agent)
+- **Date & Time:** 2026-08-22
+- **Prompt:** "qua doc 11" — theo `docs/11-BUG-REPORT-GITHUB-ISSUES.md`: chạy request thật để kiểm chứng từng ứng viên bug đã liệt kê ở `docs/TODO-CON-LAI.md` (P1, P2, P3, P5, P6), đặc biệt P3 vốn ghi rõ "chưa kiểm chứng bằng request thật — phải chạy curl trước khi báo"; viết `bug-report/verify-bugs.mjs`; điền đầy đủ `bug-report/bug-report.md` §1–§2.
+- **AI Output:** chạy `curl` thật vào backend đang sống, xác nhận P2 (200+{}), P3a (500 lỗi SQL), rồi tự leo thang lên P3b (UNION SELECT rút được toàn bộ bảng `users` gồm admin/mật khẩu plaintext) để chứng minh mức độ nghiêm trọng thật thay vì chỉ dừng ở "có lỗi 500". Viết `verify-bugs.mjs` — 6/6 CONFIRMED.
+- **Human Review Notes:** *(SV đã kiểm)* — kiểm tra lại số cột thật của bảng `products` (6 cột) trước khi chấp nhận câu UNION injection của AI, vì lần đầu AI đoán sai số cột (báo lỗi "SELECTs... do not have the same number of result columns") — không phải AI viết đúng ngay từ đầu, phải tự đối chiếu schema thật. Cũng phát hiện AI ban đầu viết `verify-bugs.mjs`'s check P6 bằng cách đọc file `database.js` từ một đường dẫn cục bộ ngoài repo (`HW02-new/...`) — chỉ chạy được trên máy tác giả, sẽ lỗi trên máy chấm bài; yêu cầu sửa lại thành tải trực tiếp source từ GitHub raw để script chạy được ở bất kỳ máy nào. P4 (userCarts leak) được xác nhận **không phải bug** dựa trên số liệu Soak đã có từ trước (LOG-013), không lặp lại phép đo.
+- **Con số nào trong báo cáo đến từ lượt này:** `bug-report/bug-report.md` §1–§2, `bug-report/verify-bugs.mjs`
 
 ---
 
