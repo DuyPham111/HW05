@@ -141,13 +141,13 @@ Nếu kết quả thật **không** buộc bạn sửa gì, cũng nói ra điề
 
 ## 5. Checklist Task 3
 
-- [ ] Flow chart có đủ **3 động từ của đề**: watch commits · decide whether to run · flag p95 regressions
-- [ ] Mỗi nút quyết định có một đoạn giải thích **vì sao chọn ngưỡng đó**
-- [ ] Bảng trade-off có **cost** và **false alarms** (đề nêu đích danh) + ít nhất 4 trade-off khác
-- [ ] File `.mmd` + ảnh SVG/PNG trong `report/assets/`, nhúng được vào PDF
-- [ ] `ci/ci-runs.md` có ≥ 4 lượt **thật**, kèm link tới GitHub Actions
-- [ ] Có ≥ 1 lượt **FAIL** chứng minh cổng chặn hoạt động
-- [ ] §4.4 nói rõ kết quả thật đã sửa lại đề xuất ban đầu như thế nào
+- [x] Flow chart có đủ **3 động từ của đề**: watch commits · decide whether to run · flag p95 regressions
+- [x] Mỗi nút quyết định có một đoạn giải thích **vì sao chọn ngưỡng đó**
+- [x] Bảng trade-off có **cost** và **false alarms** (đề nêu đích danh) + ít nhất 4 trade-off khác
+- [x] File `.mmd` + ảnh SVG/PNG trong `report/assets/`, nhúng được vào PDF
+- [x] `ci/ci-runs.md` có ≥ 4 lượt **thật**, kèm link tới GitHub Actions (Run #2–#5)
+- [x] Có ≥ 1 lượt **FAIL** chứng minh cổng chặn hoạt động (2 lượt: #3 cố ý, #4 ngoài kế hoạch)
+- [x] §4.4 nói rõ kết quả thật đã sửa lại đề xuất ban đầu như thế nào
 
 ---
 
