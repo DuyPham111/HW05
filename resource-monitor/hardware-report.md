@@ -1,25 +1,35 @@
-# Hardware Report — 23127183
+# Hardware Report - 23127183
 
-> Sinh bằng `npm run hardware` (`tools/hardware-report.ps1`). Ảnh dxdiag: `screenshots/hardware-dxdiag.png`.
-> §11: hostname phải **khớp với các HW trước** của bạn.
+> Sinh tu dong bang `npm run hardware` (`tools/hardware-report.ps1`).
+> Anh dxdiag: `screenshots/hardware-dxdiag.png` - xem `docs/HUONG-DAN-VIEC-TU-LAM.md` muc A.
+> muc 11: hostname phai **khop voi cac HW truoc** cua sinh vien.
 
-| Mục | Giá trị |
+| Muc | Gia tri |
 |---|---|
 | **Hostname** | `Pham_Vu_Ngoc_Duy` |
-| User | |
-| OS + build | Windows 11 … |
-| CPU | … · … lõi vật lý / … lõi logic · … GHz |
-| RAM | … GB |
-| Ổ đĩa chứa SUT | |
-| Java | Temurin 17.0.19 |
+| Ten NetBIOS (bi cat 15 ky tu) | `PHAM_VU_NGOC_DU` |
+| User | `DELL` |
+| OS | Microsoft Windows 11 Home Single Language - build 26200, 64-bit |
+| CPU | Intel(R) Core(TM) i5-1035G1 CPU @ 1.00GHz |
+| So loi | **4 loi vat ly / 8 loi logic** |
+| Xung co ban | 1190 MHz |
+| RAM | **15.8 GB** |
+| O dia chua SUT | D: - 296.9 GB tong, 90.8 GB trong |
+| Java | 17.0.19 |
 | JMeter | 5.6.3 |
 | Node | v22.16.0 |
-| Ngày sinh báo cáo | |
+| Ngay sinh bao cao | 2026-08-22 11:37:19 |
 
-## Giới hạn cần công bố
+## Gioi han bat buoc phai cong bo
 
-**Load generator (JMeter) và SUT (backend Node) chạy trên CÙNG máy này.** Mọi số đo vì thế bao gồm cả chi phí sinh tải. CPU đỉnh của `java.exe` so với `node.exe` ở từng lượt được ghi trong `results/resources/*.resources.csv` và đối chiếu ở `report/main-report.md` §6.
+**Load generator (JMeter) va SUT (backend Node) chay tren CUNG may nay.** Moi so do vi the
+bao gom ca chi phi sinh tai. CPU dinh cua `java.exe` so voi `node.exe` o tung luot duoc ghi
+trong `results/resources/*.resources.csv` va doi chieu o `report/main-report.md` muc 6.
 
-## Ảnh
+**Cach doc cot `cpu_percent_of_one_core`:** 100 = bao hoa **mot loi**. May nay co
+8 loi logic nen tran ly thuyet la 800.
+Node chay JavaScript tren mot luong nen cham ~100 la da bao hoa, du may con loi ranh.
+
+## Anh
 
 ![dxdiag](screenshots/hardware-dxdiag.png)
